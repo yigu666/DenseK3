@@ -76,7 +76,7 @@ numeric threshold, top-1 identity, and top-5 set.
 
 The maintainer publication targets are GitHub
 `https://github.com/yigu666/DenseK3` and Hugging Face
-`https://huggingface.co/qinfu19/DenseK3`. The GitHub tree and standalone model
+`https://huggingface.co/qinfu19/DenseK3-4B`. The GitHub tree and standalone model
 directory remain available locally under the release staging area for audit and
 future synchronization. Re-check live links and Hub file hashes after any
 additional publication change. Review `RELEASE_SCOPE.md`, `MODEL_CARD.md`,

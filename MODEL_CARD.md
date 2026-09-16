@@ -20,15 +20,15 @@ official Moonshot AI or Kimi release.
 
 The concise, bilingual model cards for Hub users are:
 
-- [Hugging Face model card — English](https://huggingface.co/qinfu19/DenseK3/blob/main/README.md)
-- [Hugging Face model card — 中文](https://huggingface.co/qinfu19/DenseK3/blob/main/README_zh.md)
+- [Hugging Face model card — English](https://huggingface.co/qinfu19/DenseK3-4B/blob/main/README.md)
+- [Hugging Face model card — 中文](https://huggingface.co/qinfu19/DenseK3-4B/blob/main/README_zh.md)
 
 ## Release evidence
 
 - Architecture and deterministic donor mapping: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/MIGRATION.md`](docs/MIGRATION.md).
 - Joint recovery and dual-teacher distillation contracts: [`docs/TRAINING.md`](docs/TRAINING.md).
 - Frozen benchmark protocol and exact aggregates: [`docs/RESULTS.md`](docs/RESULTS.md).
-- Standalone export parity and file hashes: [`release/RELEASE_VALIDATION.md`](release/RELEASE_VALIDATION.md) and the [Hub parity summary](https://huggingface.co/qinfu19/DenseK3/blob/main/PARITY_SUMMARY.json).
+- Standalone export parity and file hashes: [`release/RELEASE_VALIDATION.md`](release/RELEASE_VALIDATION.md) and the [Hub parity summary](https://huggingface.co/qinfu19/DenseK3-4B/blob/main/PARITY_SUMMARY.json).
 - Omitted branches, failed candidates, and disclosure-only long-context exploration: [`docs/RELEASE_SCOPE.md`](docs/RELEASE_SCOPE.md).
 
 The internal provenance label `P11.6` is metadata only; it is not a second public

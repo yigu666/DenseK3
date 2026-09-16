@@ -206,7 +206,7 @@ def _load_callable(spec: str) -> Any:
 
 
 def _model_card(namespace: str) -> str:
-    model_id = f"{namespace}/DenseK3"
+    model_id = f"{namespace}/DenseK3-4B"
     return f"""---
 model_name: DenseK3-4B
 library_name: transformers
@@ -369,7 +369,7 @@ third-party materials retain their upstream terms; preserve the GitHub notices.
 
 
 def _model_card_zh(namespace: str) -> str:
-    model_id = f"{namespace}/DenseK3"
+    model_id = f"{namespace}/DenseK3-4B"
     return f"""---
 model_name: DenseK3-4B
 library_name: transformers
