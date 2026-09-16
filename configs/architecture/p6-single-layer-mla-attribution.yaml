@@ -1,0 +1,70 @@
+stage: P6.1b
+status: FROZEN
+
+source:
+  checkpoint: outputs/densek3-core/checkpoints/p5/densek3-4b-k3-decay-silu-i1
+  p6_1_report: outputs/densek3-core/manifests/p6/p6-single-layer-probe.json
+  p6_1_decision: REDESIGN
+
+scope:
+  probe_layer: 3
+  training: false
+  rank: 512
+  other_layers_unchanged: true
+  scale_to_all_8_layers: false
+  true_latent_cache: false
+  heldout_accessed: false
+
+cases:
+  B:
+    rank512: false
+    split_q_gate: false
+    qk_norm: true
+    latent_norm: false
+  C:
+    rank512: true
+    split_q_gate: true
+    qk_norm: false
+    latent_norm: true
+  D:
+    rank512: false
+    split_q_gate: true
+    qk_norm: true
+    latent_norm: false
+  E:
+    rank512: false
+    split_q_gate: false
+    qk_norm: false
+    latent_norm: false
+  F:
+    rank512: true
+    split_q_gate: false
+    qk_norm: true
+    latent_norm: false
+  G:
+    rank512: true
+    split_q_gate: false
+    qk_norm: true
+    latent_norm: true
+  H:
+    rank512: true
+    split_q_gate: false
+    qk_norm: false
+    latent_norm: false
+
+evaluation:
+  full_dev_sequences: 97
+  full_dev_role: primary_measurement
+  canonical_role: diagnostic
+  generation_prompts: 5
+  automatic_capability_gate: false
+
+forbidden:
+  training: true
+  optimizer: true
+  checkpoint_write: true
+  rank_change: true
+  conversion_of_other_gqa_layers: true
+  true_latent_cache: true
+  heldout_access: true
+  gate_change: true

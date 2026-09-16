@@ -1,0 +1,16 @@
+# Snapshot of the server's zmm_2 environment used for release verification.
+# Install the CUDA 12.8 PyTorch wheel from the official PyTorch index.
+--extra-index-url https://download.pytorch.org/whl/cu128
+torch==2.8.0+cu128
+transformers==5.12.1
+accelerate==1.14.0
+numpy==2.3.5
+pyarrow==21.0.0
+PyYAML==6.0.3
+safetensors==0.8.0
+flash-linear-attention==0.5.2
+triton==3.4.0
+datasets==4.5.0
+huggingface-hub==1.29.0
+pytest==9.0.2
+ruff==0.14.10

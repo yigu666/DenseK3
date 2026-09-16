@@ -1,0 +1,52 @@
+schema_version: 1
+stage: P5-RETHINK-V3-INITIALIZATION-PROBE
+status: FROZEN
+priority: INITIALIZATION_FIRST
+
+architecture:
+  decay_formula: kimi_k3_lower_bounded_sigmoid
+  lower_bound: -5.0
+  output_gate: silu
+  topology: 24_kda_8_gqa
+
+initializations:
+  I0:
+    definition: current_direct_parameter_inheritance
+    evidence: reuse_frozen_v2_step_zero
+    retrain: false
+  I1:
+    definition: retention_matched_analytic_local_value_and_slope
+    pivot_raw_decay: 0.0
+    probability_epsilon: 9.5367431640625e-7
+    calibration_used: false
+  I2:
+    definition: calibration_fitted
+    status: BLOCKED_NOT_REQUIRED_BEFORE_I1_RESULT_REVIEW
+
+evaluation:
+  primary_metric: full_dev_ce
+  dev_sequences: 97
+  canonical_role: diagnostic
+  per_layer_hidden_drift: true
+  decay_retention_distribution: true
+  generation_categories: 5
+  finite_required: true
+  p4_full_dev_ce: 2.306086237897578
+  existing_final_dev_ce_gate: 2.456086237897578
+  gate_modified: false
+
+forbidden:
+  heldout_access: true
+  training: true
+  optimizer_creation: true
+  I2_calibration: true
+  model_formula_change: true
+  converter_change: true
+  FLA_change: true
+  formal_gate_change: true
+
+blocked:
+  p5_v3_training_allowed: false
+  p5_full_allowed: false
+  p5_frozen: false
+  p6_allowed: false

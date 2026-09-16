@@ -1,0 +1,115 @@
+stage: P6.2c
+status: FROZEN
+
+source:
+  p6_2b_1_required_status: NO_GO
+  p6_2b_2_required_status: NO_GO_WITHIN_64K
+  initialization: ACTIVATION_WEIGHTED_RANK512_PLUS_SCALE_MATCHED_LATENT_NORM
+  teacher: FULL_RANK_NOPE_B
+
+scope:
+  pilot_layers: [3, 23]
+  formal_kv_lora_rank: 512
+  no_pe: true
+  donor_qk_norm_preserved: true
+  donor_qk_norm_frozen: true
+  global_recovery_training: false
+  eight_layer_scaleout: false
+
+phase_a:
+  training: false
+  cases:
+    N0: C3_QK_NORM_REMOVED
+    N1: C3_DONOR_QK_NORM_PRESERVED
+    N2: P6_2B_2_STEP256_WITH_DONOR_QK_NORM_RESTORED_POST_HOC
+  n2_diagnostic_only: true
+  layer_23_mixer_improvement_fraction_min: 0.10
+  layer_23_mixer_relative_l2_signal_max: 0.70
+  full_dev_accessed: false
+  heldout_accessed: false
+  canonical_accessed: false
+
+phase_b:
+  condition: PHASE_A_POSITIVE_SIGNAL
+  fresh_c3_initialization: true
+  p6_2b_checkpoint_resume: false
+  optimizer: AdamW
+  learning_rate: 0.0002
+  betas: [0.9, 0.95]
+  epsilon: 1.0e-8
+  weight_decay: 0.0
+  gradient_clip: 1.0
+  maximum_steps_per_layer: 256
+  maximum_activation_tokens_per_layer: 65536
+  evaluation_steps: [0, 32, 64, 96, 128, 160, 192, 224, 256]
+  scheduler: constant
+  seed: 20260814
+  best_checkpoint_within_budget: true
+
+data:
+  split: train
+  sequence_prefix: 256
+  c3_initialization_sequences: 8
+  fit_sequences: 128
+  validation_sequences: 32
+  fit_order_repeated_exactly_twice: true
+  document_disjoint: true
+  full_dev_accessed: false
+  heldout_accessed: false
+  canonical_accessed: false
+
+loss:
+  attention_core_normalized_mse_weight: 1.0
+  mixer_output_normalized_mse_weight: 1.0
+  all_other_weights: 0.0
+
+trainable:
+  parameter_names:
+    - kv_a_proj.weight
+    - kv_a_layernorm.weight
+    - kv_b_proj.weight
+
+frozen:
+  parameter_semantics:
+    - q_projection
+    - k_norm
+    - q_norm
+    - gate_projection
+    - output_projection
+    - all_remaining_model_parameters
+
+gate:
+  formal_comparison_baseline: N0_C3_QK_NORM_REMOVED
+  layer_23_mixer_relative_l2_max: 0.40
+  layer_23_mixer_improvement_fraction_min: 0.45
+  layer_3_mixer_relative_l2_max: 0.32
+  layer_3_mixer_degradation_fraction_max: 0.20
+  attention_core_improvement_fraction_min: 0.20
+  finite_required: true
+  formal_gate_modified: false
+
+artifact:
+  local_trainable_only: true
+  full_model_checkpoint: false
+  optimizer_state: false
+  directory: outputs/densek3-core/artifacts/p6/p6-2c-pilot
+
+forbidden:
+  formal_rank_change: true
+  initialization_change: true
+  loss_change: true
+  learning_rate_change: true
+  optimizer_change: true
+  trainable_scope_change: true
+  qk_norm_training: true
+  p6_2b_resume: true
+  budget_extension_beyond_65536: true
+  other_layer_calibration: true
+  full_dev_access: true
+  heldout_access: true
+  canonical_access: true
+  full_model_checkpoint: true
+  eight_layer_scaleout: true
+  global_recovery_training: true
+  p6_3_allowed_status: true
+  p7_allowed_status: true

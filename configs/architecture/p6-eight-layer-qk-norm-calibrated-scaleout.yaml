@@ -1,0 +1,121 @@
+stage: P6.2d
+status: FROZEN
+
+source:
+  p5_checkpoint: outputs/densek3-core/checkpoints/p5/densek3-4b-k3-decay-silu-i1
+  old_p6_2_report: outputs/densek3-core/manifests/p6/p6-2/p6-2-scaleout.json
+  p6_2c_report: outputs/densek3-core/manifests/p6/p6-2c/p6-2c-qk-norm-bridge.json
+  p6_2c_artifact: outputs/densek3-core/artifacts/p6/p6-2c-pilot/p6-2c-best-trainable.safetensors
+  p6_2c_artifact_sha256: 6ce885483158b9326ebeef4a37c73772e1b75ff3780c8dded08c2770e768a94e
+  p6_2c_config_sha256: 44aae69e7699a4fd446f511e79f8cf0abf73f6f1e3b449170648a9f8e8000572
+
+scope:
+  target_layers: [3, 7, 11, 15, 19, 23, 27, 31]
+  reused_layers: [3, 23]
+  newly_calibrated_layers: [7, 11, 15, 19, 27, 31]
+  topology: 24_kda_8_mla
+  formal_kv_lora_rank: 512
+  no_pe: true
+  qk_norm_semantics: PRESERVE_DONOR_QK_RMSNORM
+  latent_norm: SCALE_MATCHED
+  cache_mode: expanded_reference
+  true_latent_cache: false
+  global_recovery_training: false
+
+initialization:
+  algorithm: ACTIVATION_WEIGHTED_RANK512_PLUS_SCALE_MATCHED_LATENT_NORM
+  statistics_source: UNTOUCHED_FROZEN_P5
+  independent_per_layer: true
+  sequential_self_conditioning: false
+  donor_qk_norm_present_from_start: true
+
+data:
+  split: train
+  sequence_prefix: 256
+  c3_initialization_sequences: 8
+  fit_sequences: 128
+  validation_sequences: 32
+  fit_order_repeated_exactly_twice: true
+  document_disjoint: true
+
+optimization:
+  optimizer: AdamW
+  learning_rate: 0.0002
+  betas: [0.9, 0.95]
+  epsilon: 1.0e-8
+  weight_decay: 0.0
+  gradient_clip: 1.0
+  maximum_steps_per_layer: 256
+  maximum_activation_tokens_per_layer: 65536
+  evaluation_steps: [0, 32, 64, 96, 128, 160, 192, 224, 256]
+  scheduler: constant
+  seed: 20260814
+  best_checkpoint_within_budget: true
+
+loss:
+  teacher: PER_LAYER_FULL_RANK_NOPE_B
+  attention_core_normalized_mse_weight: 1.0
+  mixer_output_normalized_mse_weight: 1.0
+  all_other_weights: 0.0
+
+trainable:
+  parameter_names:
+    - kv_a_proj.weight
+    - kv_a_layernorm.weight
+    - kv_b_proj.weight
+
+local_safety:
+  fresh_n1_mixer_relative_l2_max: 0.70
+  fresh_n1_is_step_zero_safety_candidate: true
+  calibrated_mixer_must_not_exceed_n1: true
+  calibrated_mixer_relative_l2_max: 0.70
+  finite_required: true
+  no_shared_layer23_absolute_gate: true
+
+evaluation:
+  unique_full_model_candidate: true
+  candidate_checkpoint_written_before_full_dev: true
+  full_dev_sequences: 97
+  full_dev_evaluations: 1
+  full_dev_role: primary_gate
+  canonical_accessed: false
+  heldout_accessed: false
+  generation_categories: 5
+  record_full_model_drift: true
+
+gate:
+  p5_full_dev_ce: 2.306309482533407
+  full_dev_ce_delta_vs_p5_max: 0.15
+  generation_not_collapsed_required: true
+  finite_required: true
+  no_new_drift_thresholds: true
+
+comparison:
+  old_p6_2_full_dev_ce: 2.7116558523606864
+  report_absolute_ce_recovered: true
+  report_old_architecture_shock_recovery_fraction: true
+
+artifact:
+  local_trainable_only: outputs/densek3-core/artifacts/p6/p6-2d-local
+  full_model_candidate: outputs/densek3-core/checkpoints/p6/densek3-4b-8mla-c3-qk-norm-calibrated-candidate
+  candidate_status: CANDIDATE_NOT_FROZEN
+
+forbidden:
+  formal_rank_change: true
+  qk_norm_removal: true
+  qk_norm_training: true
+  initialization_change: true
+  loss_change: true
+  optimizer_change: true
+  learning_rate_change: true
+  trainable_scope_change: true
+  budget_extension: true
+  sequential_calibration: true
+  global_recovery_training: true
+  multiple_full_model_candidates: true
+  multiple_full_dev_evaluations: true
+  canonical_access: true
+  heldout_access: true
+  true_latent_cache: true
+  p6_3_allowed_before_pass: true
+  p7_allowed_status: true

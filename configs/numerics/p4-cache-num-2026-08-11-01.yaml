@@ -1,0 +1,134 @@
+amendment_id: P4-CACHE-NUM-2026-08-11-01
+type: Composite cache-equivalence Gate hierarchy
+status: APPROVED
+approved_at: 2026-08-11
+
+scope: P4.6 deterministic full-vs-incremental cache replay only
+global_allclose_modified: false
+architecture_modified: false
+converter_modified: false
+fla_modified: false
+kda_recurrence_modified: false
+state_contract_modified: false
+p2_numerics_modified: false
+p3_numerics_modified: false
+p4_4_numerics_modified: false
+
+p4_cache_equivalence:
+  direct_cache_semantics:
+    role: hard_gate
+    evidence: p4-cache-causal-diagnostics.json
+    acceptance_requires_all:
+      - canonical_convolution_partition_output
+      - canonical_convolution_final_state
+      - reference_recurrence_partition
+      - production_fla_existing_gate
+      - gqa_append_exact
+      - position_sequence_exact
+      - seen_tokens_exact
+      - finite_values
+      - artifact_identity_match
+
+  integrated_bf16_logits:
+    role: case_scoped_numerical_envelope
+    evaluation:
+      - try_standard_bf16_allclose_first
+      - otherwise_require_all_case_limits
+    cases:
+      prompt_1_decode_1:
+        relative_l2_error_max: 2.0e-2
+        cosine_similarity_min: 0.99985
+        mean_abs_error_max: 4.5e-2
+        p99_9_abs_error_max: 1.75e-1
+        failed_allclose_fraction_max: 7.5e-1
+        max_abs_error_max: 2.5e-1
+        nan_count_max: 0
+        inf_count_max: 0
+      prompt_7_decode_8:
+        relative_l2_error_max: 1.2e-2
+        cosine_similarity_min: 0.99994
+        mean_abs_error_max: 2.25e-2
+        p99_9_abs_error_max: 1.0e-1
+        failed_allclose_fraction_max: 5.0e-1
+        max_abs_error_max: 2.5e-1
+        nan_count_max: 0
+        inf_count_max: 0
+      prompt_64_decode_32:
+        relative_l2_error_max: 1.8e-2
+        cosine_similarity_min: 0.99985
+        mean_abs_error_max: 3.0e-2
+        p99_9_abs_error_max: 1.25e-1
+        failed_allclose_fraction_max: 6.5e-1
+        max_abs_error_max: 5.0e-1
+        nan_count_max: 0
+        inf_count_max: 0
+
+  integrated_cache_tensors:
+    role: structural_hard_gate_plus_local_numerical_envelope
+    structural_acceptance_requires_all:
+      - seen_tokens_exact
+      - tensor_shapes_exact
+      - gqa_sequence_lengths_exact
+      - finite_values
+    numerical_limits:
+      relative_l2_error_max: 2.0e-2
+      cosine_similarity_min: 0.9998
+      mean_abs_error_max: 2.0e-2
+      max_abs_error_max: 3.75e-1
+      nan_count_max: 0
+      inf_count_max: 0
+
+  token_decisions:
+    role: functional_hard_gate
+    greedy_top1_source: argmax
+    top10_source: independent_topk_10
+    integrated_hard_scope:
+      - prefill_last
+      - decode
+    prefill_unused:
+      diagnostic_only: true
+      record:
+        - argmax agreement
+        - exact argmax tie count
+        - top10 overlap
+        - margins and cross ranks
+    top1_agreement_fraction_min: 1.0
+    top10_overlap_count_min: 9
+    top10_overlap_fraction_mean_hard_gate: false
+    nan_count_max: 0
+    inf_count_max: 0
+
+  batch_shape_control:
+    role: independent_execution_shape_control
+    logits_limits:
+      relative_l2_error_max: 8.0e-3
+      cosine_similarity_min: 0.99996
+      mean_abs_error_max: 1.25e-2
+      p99_9_abs_error_max: 1.0e-1
+      failed_allclose_fraction_max: 3.5e-1
+      max_abs_error_max: 2.0e-1
+      nan_count_max: 0
+      inf_count_max: 0
+    each_kda_state_limits:
+      relative_l2_error_max: 1.0e-2
+      cosine_similarity_min: 0.99995
+      mean_abs_error_max: 1.0e-4
+      max_abs_error_max: 2.5e-2
+      nan_count_max: 0
+      inf_count_max: 0
+    token_decisions:
+      scope: all batch positions
+      greedy_top1_source: argmax
+      top10_source: independent_topk_10
+      top1_agreement_fraction_min: 1.0
+      top10_overlap_count_min: 9
+      top10_overlap_fraction_mean_hard_gate: false
+
+pass_status: PASS_WITH_COMPOSITE_CACHE_EQUIVALENCE_GATE
+
+forbidden_scope_extensions:
+  - global BF16 allclose
+  - P4.4 local transplant parity
+  - P4.5 full-model donor-vs-target parity
+  - P4.7 save/reload/generation equality
+  - P5 recovery or distillation

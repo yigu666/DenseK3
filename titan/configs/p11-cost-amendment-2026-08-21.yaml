@@ -1,0 +1,51 @@
+amendment_id: P11_COST_AMENDMENT_2026_08_21
+status: APPROVED
+
+scientific_contract:
+  general_objective_unchanged: true
+  teachers_unchanged: true
+  trainable_scope_unchanged: true
+  architecture_unchanged: true
+  loss_semantics_unchanged: true
+
+signal_accounting:
+  qwen:
+    unit: SUPERVISED_TOKENS
+    main_token_share: 0.60
+  raw_lm:
+    unit: SUPERVISED_TOKENS
+    main_token_share: 0.40
+  kimi:
+    unit: REVIEWED_ON_POLICY_TRAJECTORIES
+    fixed_supervised_token_share_disabled: true
+    mode: SPARSE_CORRECTIVE_SIDE_STREAM
+    selection: HIGH_INFORMATION_STUDENT_TRAJECTORIES
+
+kimi_runtime:
+  model: kimi-k3
+  loading: API_ONLY_NO_LOCAL_WEIGHTS
+  reasoning_effort: low
+  auto_retry: false
+  cost_calibration_max_completion_tokens: 768
+  structured_output: JSON_SCHEMA
+  reasoning_content_trained: false
+  reasoning_content_persisted: false
+  probe_api_budget_cap_cny: 5.0
+  daily_api_hard_cap_cny: 20.0
+
+cost_calibration:
+  stage: P11.4b
+  required: true
+  review_count: 24
+  domains: 4
+  reviews_per_domain: 6
+  candidate_pool_per_domain: 12
+  student_rollout_tokens_max: 16
+  qwen_disagreement_scoring: SAME_TOKENIZER_EXACT_TOKEN_LOGPROB
+  training_performed: false
+  heldout_access: false
+
+probe:
+  stage: P11.5a
+  total_training_tokens: 262144
+  allowed: CONDITIONAL_ON_P11_4B_COST_CALIBRATION_REVIEW

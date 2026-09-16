@@ -1,0 +1,39 @@
+stage: P5-RETHINK-V3-CLOSEOUT
+status: FROZEN
+
+candidate:
+  initialization: I1_RETENTION_MATCHED_ANALYTIC_LOCAL_VALUE_AND_SLOPE
+  unique: true
+  training_performed: false
+  calibration_used: false
+  i2_used: false
+
+architecture:
+  topology: 24_kda_8_gqa
+  decay_formula: kimi_k3_lower_bounded_sigmoid
+  lower_bound: -5.0
+  output_gate: silu
+
+heldout:
+  split: heldout
+  sequences: 97
+  p4_ce: 2.256015
+  maximum_delta: 0.15
+  maximum_p5_ce: 2.406015
+  candidate_count: 1
+
+artifact:
+  tensor_count: 546
+  unique_parameters: 4224329984
+  mapping_tensor_count: 48
+  native_checkpoint_required: true
+
+forbidden:
+  training: true
+  optimizer: true
+  scheduler: true
+  i2: true
+  calibration: true
+  gate_change: true
+  alternate_candidate: true
+  qwen_evaluation: true

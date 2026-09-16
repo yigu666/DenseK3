@@ -1,0 +1,70 @@
+stage: TITAN_P8_BLOCK_ATTNRES
+status: FROZEN_EXECUTION_CONTRACT
+
+source:
+  checkpoint: outputs/densek3-core/checkpoints/p6/densek3-4b-8mla-c3-qk-norm-calibrated-candidate
+  p7_final: titan/manifests/reproduction/p7/p7-final-check.json
+  p7_runtime: titan/manifests/reproduction/p7/p7-runtime-manifest.json
+  source_tensor_count: 562
+  source_parameter_count: 4226431232
+
+architecture:
+  transformer_layers: 32
+  residual_sublayers: 64
+  block_count: 8
+  block_size_residuals: 8
+  block_size_transformers: 4
+  block_boundary_layers: [3, 7, 11, 15, 19, 23, 27, 31]
+  routing_read_sites: 64
+  final_aggregation_sites: 1
+  pseudo_query_initialization: zero
+  reference_backend: pytorch
+
+frozen:
+  kda: true
+  mla: true
+  mla_rank: 512
+  mla_qk_norm: true
+  p7_true_latent_cache: true
+  mlp: true
+  embedding: true
+  lm_head: true
+  original_weights_modified: false
+
+reference_semantics:
+  n1_block_size_residuals: 64
+  n1_probe_lengths: [1, 7, 65]
+  source_partition_fp32_relative_l2_max: 1.0e-12
+  zero_query_uniform_required: true
+  final_depth_aggregation_required: true
+
+zero_init_shock:
+  probe_lengths: [1, 7, 65, 129]
+  full_dev_sequences: 97
+  strong_go_delta_ce_max: 0.05
+  trainable_recovery_delta_ce_max: 0.15
+  heldout_accessed: false
+
+training_probe:
+  allowed_only_after_p8_2: true
+  sequence_length: 2048
+  train_sequence_range: [0, 64]
+  max_effective_tokens: 131072
+  evaluation_effective_tokens: [0, 32768, 65536, 131072]
+  objective: causal_lm_ce_only
+  optimizer: adamw
+  learning_rate: 0.001
+  weight_decay: 0.0
+  warmup_ratio: 0.1
+  minimum_learning_rate_ratio: 0.1
+  gradient_clip_norm: 1.0
+  trainable: [pseudo_query, source_rmsnorm_scale]
+  source_model_frozen: true
+  heldout_accessed: false
+  extension_requires_review: true
+
+final:
+  titan_only: true
+  canonical_bf16_replay: pending
+  canonical_frozen: false
+  p9_titan_allowed_only_on_go: true

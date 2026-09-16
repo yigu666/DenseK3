@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "densek3-core"
+version = "0.1.0"
+description = "DenseK3-Core architecture recovery experiments"
+requires-python = ">=3.10"
+dependencies = [
+    "accelerate>=1.14",
+    "flash-linear-attention>=0.5.2",
+    "numpy>=1.24",
+    "pyarrow>=11",
+    "PyYAML>=6.0",
+    "safetensors>=0.7",
+    "torch>=2.7",
+    "transformers>=5.12.1",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 127
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

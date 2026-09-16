@@ -1,0 +1,58 @@
+stage: TITAN_P9_SITU_GLU
+status: FROZEN_EXECUTION_CONTRACT
+
+source:
+  checkpoint: outputs/densek3-core/checkpoints/p6/densek3-4b-8mla-c3-qk-norm-calibrated-candidate
+  p8_zero_checkpoint: outputs/densek3-core/checkpoints/p8/routing-probe/step-000000
+  p8_zero_report: titan/manifests/reproduction/p8/p8-2-zero-init-shock.json
+  p8_routing_report: titan/manifests/reproduction/p8/routing-probe/p8-routing-probe.json
+  p8_trained_routing_forbidden: true
+  source_state: P7_TRUE_LATENT_CACHE_PLUS_P8_ZERO_INIT_ATTNRES
+
+architecture:
+  transformer_layers: 32
+  kda_layers: 24
+  mla_layers: 8
+  mla_rank: 512
+  qk_rmsnorm_preserved: true
+  true_latent_cache: true
+  block_attnres: true
+  attnres_query_state: zero
+  ffn: situ_glu
+  situ_beta: 4.0
+  situ_linear_beta: 25.0
+
+calibration:
+  split: train
+  sequence_length: 2048
+  fit_sequence_range: [0, 16]
+  validation_sequence_range: [19, 23]
+  fit_effective_tokens: 32768
+  validation_effective_tokens: 8192
+  document_disjoint_required: true
+  epsilon: 1.0e-12
+  optimizer: none
+  backward: false
+  heldout_accessed: false
+
+initialization:
+  candidates: [S0_RAW_SITU, S1_ACTIVATION_MATCHED_SITU]
+  s1_fold_target: down_projection_columns
+  per_layer_selection_primary: post_residual_relative_l2
+  per_layer_selection_tiebreak: mlp_output_relative_l2
+
+evaluation:
+  full_dev_sequences: 97
+  low_shock_delta_ce_max: 0.05
+  recovery_required_delta_ce_max: 0.15
+  generation_categories: 5
+  cache_required: true
+  finite_required: true
+
+final:
+  titan_dtype: fp16
+  canonical_bf16_replay: pending
+  optimizer_allowed: false
+  training_allowed: false
+  heldout_allowed: false
+  p10_stage: CORE_K3_JOINT_RECOVERY

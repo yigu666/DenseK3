@@ -1,0 +1,21 @@
+DenseK3-Core
+Copyright 2026 DenseK3-Core contributors
+
+This repository's original source code is released under the Apache License
+2.0. Model weights and datasets may be governed by separate terms.
+
+The architecture and reproducibility work relies on or compares against:
+
+- Qwen3.5-4B-Base, revision 1001bb4d826a52d1f399e183466143f4da7b741b.
+  Donor model files are not vendored here. See the upstream model card and
+  license before downloading or redistributing them.
+- flash-linear-attention (FLA), used as an installed dependency. It is not
+  vendored in this repository and retains its upstream MIT license.
+- Kimi Linear / Kimi K3 and Attention Residuals as architectural references.
+  No upstream repository snapshot is vendored. Users must review the licenses
+  and terms of any upstream code or weights they obtain independently.
+- MMLU, WikiText-103, LongBench-v2, FineWeb-Edu, and NVIDIA RULER. Dataset
+  content is not included. Each dataset retains its own license and terms.
+
+Links and pinned revisions are recorded in docs/REPRODUCIBILITY.md.
+

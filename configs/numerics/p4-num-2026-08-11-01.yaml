@@ -1,0 +1,60 @@
+amendment_id: P4-NUM-2026-08-11-01
+type: Gate hierarchy clarification
+status: APPROVED
+approved_at: 2026-08-11
+
+scope: P4.4 single-layer qwen_compat transplant parity only
+architecture_modified: false
+converter_modified: false
+kda_recurrence_modified: false
+state_contract_modified: false
+p2_numerics_modified: false
+p3_numerics_modified: false
+
+p4_local_kda_transplant_parity:
+  output:
+    role: functional_hard_gate
+    evaluation:
+      - try_standard_bf16_gate_first
+      - if_standard_gate_fails_allow_p3_output_distribution_thresholds
+    distribution_thresholds:
+      relative_l2_error_max: 7.0e-3
+      cosine_similarity_min: 0.99997
+      mean_abs_error_max: 1.0e-3
+      p99_9_abs_error_max: 4.0e-3
+      failed_allclose_fraction_max: 1.0e-4
+      max_abs_error_max: 1.25e-1
+      nan_count_max: 0
+      inf_count_max: 0
+
+  final_state:
+    role: functional_hard_gate
+    existing_gate_required: true
+
+  beta:
+    role: functional_parameter_gate
+    existing_gate_required: true
+
+  auxiliary_intermediates:
+    tensors:
+      - raw_a_logits
+      - channel_a_logits
+      - decay
+    standard_allclose_preferred: true
+    standard_allclose_required: false
+    acceptance_requires_all:
+      - fp32_strict_parity
+      - parameter_embedding_audit
+      - forced_fp32_projection_parity
+      - causal_injection_isolation
+      - final_output_functional_gate
+      - final_state_existing_gate
+      - beta_existing_gate
+      - finite_values
+
+forbidden_scope_extensions:
+  - P4.5 full-model hidden states
+  - P4.5 full-model logits
+  - P4.5 loss
+  - P4.6 cache parity
+  - P4.7 generation

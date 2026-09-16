@@ -1,0 +1,69 @@
+stage: P6.2
+status: FROZEN
+
+source:
+  checkpoint: outputs/densek3-core/checkpoints/p5/densek3-4b-k3-decay-silu-i1
+  p6_1_report: outputs/densek3-core/manifests/p6/p6-single-layer-probe.json
+  p6_1c_report: outputs/densek3-core/manifests/p6/p6-1c/p6-1c-initialization.json
+  required_initialization: ACTIVATION_WEIGHTED_RANK512_PLUS_SCALE_MATCHED_LATENT_NORM
+
+scope:
+  target_layers: [3, 7, 11, 15, 19, 23, 27, 31]
+  topology: 24_kda_8_mla
+  rank: 512
+  no_pe: true
+  split_q_gate: true
+  qk_norm: false
+  training: false
+  cache_mode: expanded_reference
+  true_latent_cache: false
+  heldout_accessed: false
+
+calibration:
+  split: train
+  sequence_indices: [0, 1, 2, 3, 4, 5, 6, 7]
+  sequence_length: 2048
+  selection_token_prefix: 256
+  statistics_source: untouched_frozen_p5_donor
+  sequential_self_conditioning: false
+  per_layer_statistics: true
+  covariance_dtype: float32
+  factorization_dtype: float32
+  deterministic_exact: true
+
+evaluation:
+  canonical_role: diagnostic_only
+  full_dev_sequences: 97
+  full_dev_role: primary_gate
+  record_all_32_layer_drift: true
+  record_mla_boundary_drift: true
+  record_argmax_and_top10: true
+  generation_categories: 5
+  unique_full_model_candidate: true
+
+gate:
+  full_dev_ce_delta_vs_p5_max: 0.15
+  finite_required: true
+  generation_stable_required: true
+  all_layer_conversions_valid_required: true
+  drift_is_diagnostic_not_thresholded: true
+  per_layer_mixer_is_diagnostic_not_thresholded: true
+
+candidate:
+  directory: outputs/densek3-core/checkpoints/p6/densek3-4b-8mla-c3-candidate
+  native_mla_required: true
+  write_only_after_gate_pass: true
+  status: CANDIDATE_NOT_FROZEN
+  formal_save_reload_stage: P6.4
+
+forbidden:
+  training: true
+  optimizer: true
+  rank_change: true
+  qk_norm_bridge: true
+  true_latent_cache: true
+  heldout_access: true
+  gate_change: true
+  sequential_self_conditioned_calibration: true
+  p6_frozen_status: true
+  p7_allowed_status: true

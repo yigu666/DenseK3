@@ -1,0 +1,94 @@
+stage: P6.2b-1
+status: FROZEN
+
+source:
+  checkpoint: outputs/densek3-core/checkpoints/p5/densek3-4b-k3-decay-silu-i1
+  p6_2_report: outputs/densek3-core/manifests/p6/p6-2/p6-2-scaleout.json
+  p6_2a_report: outputs/densek3-core/manifests/p6/p6-2a/p6-2a-capacity.json
+  initialization: ACTIVATION_WEIGHTED_RANK512_PLUS_SCALE_MATCHED_LATENT_NORM
+  teacher: FULL_RANK_NOPE_B
+
+scope:
+  pilot_layers: [3, 23]
+  formal_kv_lora_rank: 512
+  no_pe: true
+  qk_norm: false
+  global_recovery_training: false
+  local_calibration_fitting: true
+  trainable_semantics:
+    - latent_down_projection
+    - k_up_projection
+    - v_up_projection
+    - latent_rmsnorm_scale
+  frozen_semantics:
+    - q_projection
+    - gate_projection
+    - output_projection
+    - all_remaining_model_parameters
+
+data:
+  split: train
+  sequence_prefix: 256
+  fit_sequences: 128
+  validation_sequences: 32
+  fit_activation_tokens_per_layer: 32768
+  validation_activation_tokens_per_layer: 8192
+  document_disjoint: true
+  fixed_order: true
+  full_dev_accessed: false
+  heldout_accessed: false
+  canonical_accessed: false
+
+optimization:
+  optimizer: AdamW
+  learning_rate: 0.0002
+  betas: [0.9, 0.95]
+  epsilon: 1.0e-8
+  weight_decay: 0.0
+  gradient_clip: 1.0
+  maximum_steps_per_layer: 128
+  evaluation_steps: [0, 32, 64, 96, 128]
+  scheduler: constant
+  seed: 20260814
+  sweep: false
+  fresh_optimizer_per_layer: true
+  master_parameter_dtype: float32
+  formal_validation_dtype: bfloat16
+
+loss:
+  attention_core_normalized_mse_weight: 1.0
+  mixer_output_normalized_mse_weight: 1.0
+  kv_reconstruction_weight: 0.0
+  lm_ce_weight: 0.0
+  full_model_hidden_weight: 0.0
+  selection_metric: validation_attention_core_plus_mixer_relative_l2
+
+gate:
+  layer_23_mixer_relative_l2_max: 0.40
+  layer_23_mixer_improvement_fraction_min: 0.45
+  layer_3_mixer_relative_l2_max: 0.32
+  layer_3_mixer_degradation_fraction_max: 0.20
+  attention_core_improvement_fraction_min: 0.20
+  finite_required: true
+
+artifact:
+  local_trainable_only: true
+  full_model_checkpoint: false
+  optimizer_state: false
+  directory: outputs/densek3-core/artifacts/p6/p6-2b-pilot
+
+forbidden:
+  rank_change: true
+  qk_norm_bridge: true
+  output_projection_training: true
+  gate_projection_training: true
+  full_model_training: true
+  lm_loss: true
+  full_dev_access: true
+  heldout_access: true
+  canonical_access: true
+  hyperparameter_sweep: true
+  full_model_checkpoint: true
+  true_latent_cache: true
+  p6_3_allowed_status: true
+  p7_allowed_status: true

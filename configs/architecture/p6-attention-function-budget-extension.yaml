@@ -1,0 +1,72 @@
+stage: P6.2b-2
+status: FROZEN
+
+source:
+  p6_2b_1_report: outputs/densek3-core/manifests/p6/p6-2b/p6-2b-local-calibration.json
+  p6_2b_1_artifact: outputs/densek3-core/artifacts/p6/p6-2b-pilot/p6-2b-pilot-trainable.safetensors
+  required_p6_2b_1_status: NO_GO
+
+scope:
+  pilot_layers: [3, 23]
+  formal_kv_lora_rank: 512
+  one_time_extension: true
+  previous_steps: 128
+  extension_steps: 128
+  hard_total_steps: 256
+  previous_activation_tokens_per_layer: 32768
+  extension_activation_tokens_per_layer: 32768
+  hard_total_activation_tokens_per_layer: 65536
+  further_budget_extension_allowed: false
+
+resume:
+  optimizer: AdamW
+  scheduler: constant
+  deterministic_replay_required: true
+  replay_all_128_training_metrics_exact: true
+  replay_step128_bf16_tensor_hashes_exact: true
+  replay_step128_validation_exact: true
+  fresh_optimizer_at_extension_forbidden: true
+  scheduler_semantically_continuable_required: true
+
+data:
+  fit_validation_split_identical: true
+  fit_order_identical: true
+  extension_repeats_same_fixed_fit_order_once: true
+  evaluation_steps: [160, 192, 224, 256]
+  full_dev_accessed: false
+  heldout_accessed: false
+  canonical_accessed: false
+
+gate:
+  layer_23_mixer_relative_l2_max: 0.40
+  layer_23_mixer_improvement_fraction_min: 0.45
+  layer_3_mixer_relative_l2_max: 0.32
+  layer_3_mixer_degradation_fraction_max: 0.20
+  attention_core_improvement_fraction_min: 0.20
+  finite_required: true
+  best_checkpoint_within_total_budget: true
+  plateau_last64_absolute_improvement_max: 0.01
+
+artifact:
+  local_trainable_only: true
+  full_model_checkpoint: false
+  optimizer_state: false
+  directory: outputs/densek3-core/artifacts/p6/p6-2b-2-pilot
+
+forbidden:
+  learning_rate_change: true
+  loss_weight_change: true
+  qk_norm_bridge: true
+  rank_change: true
+  optimizer_change: true
+  scheduler_change: true
+  trainable_scope_change: true
+  other_layer_calibration: true
+  full_dev_access: true
+  heldout_access: true
+  canonical_access: true
+  full_model_checkpoint: true
+  scaleout: true
+  further_budget_extension: true
+  p6_3_allowed_status: true
+  p7_allowed_status: true

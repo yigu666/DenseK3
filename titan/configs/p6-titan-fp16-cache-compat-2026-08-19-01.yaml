@@ -1,0 +1,29 @@
+contract_id: P6-TITAN-FP16-CACHE-COMPAT-2026-08-19-01
+status: ACTIVE_TITAN_COMPATIBILITY_ONLY
+scope: P6 Titan RTX SM75 FP16 full-vs-incremental replay
+formal_gate: false
+formal_bf16_gate_modified: false
+canonical_backend_modified: false
+candidate_modified: false
+
+evaluation:
+  standard_allclose_first: true
+  rtol: 6.0e-3
+  atol: 6.0e-3
+  fallback_requires_all:
+    relative_l2_max: 4.0e-3
+    cosine_min: 0.99999
+    mean_abs_max: 7.5e-3
+    p99_9_abs_max: 2.5e-2
+    failed_allclose_fraction_max: 5.0e-2
+    max_abs_max: 3.125e-2
+    nan_count_max: 0
+    inf_count_max: 0
+    argmax_equal: true
+    top10_min_overlap: 9
+    cache_structure_passed: true
+
+evidence: titan/manifests/reproduction/p6/p6-cache-fp16-diagnostic.json
+pass_mode: PASS_WITH_TITAN_SM75_FP16_COMPOSITE_CACHE_ENVELOPE
+formal_p6_status_after_compatibility_pass: AWAITING_NATIVE_BF16_REPLAY
+p7_allowed: false

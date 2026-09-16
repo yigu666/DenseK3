@@ -1,0 +1,63 @@
+stage: P6.2a
+status: FROZEN
+
+source:
+  checkpoint: outputs/densek3-core/checkpoints/p5/densek3-4b-k3-decay-silu-i1
+  p6_1c_report: outputs/densek3-core/manifests/p6/p6-1c/p6-1c-initialization.json
+  p6_2_report: outputs/densek3-core/manifests/p6/p6-2/p6-2-scaleout.json
+  required_initialization: ACTIVATION_WEIGHTED_RANK512_PLUS_SCALE_MATCHED_LATENT_NORM
+
+scope:
+  target_layers: [3, 7, 11, 15, 19, 23, 27, 31]
+  formal_kv_lora_rank: 512
+  diagnostic_ranks: [512, 768, 1024]
+  no_pe: true
+  training: false
+  optimizer: false
+  checkpoint_write: false
+  heldout_accessed: false
+
+calibration:
+  split: train
+  sequence_indices: [0, 1, 2, 3, 4, 5, 6, 7]
+  sequence_length: 2048
+  evaluation_prefix: 256
+  statistics_source: untouched_frozen_p5_donor
+  teacher_forced_per_layer: true
+  scaleout_input_capture_rank: 512
+  covariance_dtype: float32
+  factorization_dtype: float32
+  deterministic_exact: true
+
+evaluation:
+  full_dev: false
+  canonical: false
+  generation: false
+  teacher_forced_fields:
+    - k
+    - v
+    - attention_core
+    - attention_output
+    - mixer_output
+    - post_attention_residual_hidden
+  latent_rms_statistics: true
+  activation_weighted_retained_energy: true
+  compare_true_scaleout_inputs: true
+
+interpretation:
+  rank_elasticity_high_min: 0.25
+  scaleout_amplification_high_min: 1.25
+  thresholds_are_diagnostic_only: true
+  continuous_metrics_are_primary: true
+
+forbidden:
+  formal_rank_change: true
+  training: true
+  optimizer: true
+  full_dev_access: true
+  heldout_access: true
+  checkpoint_write: true
+  gate_change: true
+  true_latent_cache: true
+  p6_3_allowed_status: true
+  p7_allowed_status: true

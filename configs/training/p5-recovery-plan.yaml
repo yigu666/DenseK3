@@ -1,0 +1,62 @@
+schema_version: 1
+stage: P5.3-P5.5
+status: AWAITING_P5_2_REVIEW
+
+p5_2_review:
+  report: outputs/densek3-core/manifests/p5/p5-transition-impact.json
+  decision: null
+  rationale: null
+
+fixed_architecture:
+  topology: 24-KDA/8-GQA
+  kda_gate_mode: kimi_k3
+  kda_gate_lower_bound: -5.0
+  kda_output_gate_activation: sigmoid
+  beta_activation: sigmoid
+  recurrent_state_dtype: float32
+  recurrent_state_layout: v_first
+  gqa: unchanged
+  mlp: unchanged
+  residual: unchanged
+  cache: unchanged
+
+forbidden_architecture_changes:
+  - MLA
+  - AttnRes
+  - SiTU-GLU
+
+teacher_anchors:
+  - P4 qwen_compat
+  - Qwen3.5-4B-Base donor
+
+required_monitoring:
+  - training loss
+  - teacher/student KL
+  - validation cross-entropy
+  - hidden recovery
+  - logit recovery
+  - decay distribution
+  - output-gate distribution and saturation
+  - gradient norms
+
+decisions:
+  training_data_manifest: null
+  validation_data_manifest: null
+  contamination_policy: null
+  teacher_objective_weights: null
+  causal_lm_objective_weight: null
+  hidden_distillation_layers: null
+  trainable_parameter_scope: null
+  sequence_length_schedule: null
+  training_token_budget: null
+  gpu_hour_budget: null
+  optimizer: null
+  learning_rate_schedule: null
+  checkpoint_schedule: null
+  validation_schedule: null
+  recovery_success_thresholds: null
+
+notes:
+  - This file is intentionally non-executable until P5.2 has been reviewed.
+  - Freeze a fresh optimizer state; never reuse a P4 optimizer state.
+  - P5 recovers base-model behavior and is not instruction tuning.

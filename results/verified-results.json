@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "canonical_model": "P11.6",
+  "evaluation_dates": ["2026-09-14", "2026-09-15"],
+  "precision_provenance": {
+    "p11": "TITAN_COMPATIBLE_FP16",
+    "qwen": "BF16_SDPA",
+    "shared_gpu_speed": "DIAGNOSTIC_ONLY"
+  },
+  "mmlu_5shot": {
+    "p11": {"correct": 9502, "count": 14042, "accuracy": 0.6766842330152399},
+    "qwen": {"correct": 10265, "count": 14042, "accuracy": 0.7310212220481412}
+  },
+  "wikitext103_raw_test": {
+    "p11": {"cross_entropy": 2.0820696865980577, "perplexity": 8.021052812148504},
+    "qwen": {"cross_entropy": 1.9334089517456603, "perplexity": 6.91303632640709}
+  },
+  "longbench_v2_le_131072": {
+    "p11": {"correct": 90, "count": 298, "accuracy": 0.30201342281879195},
+    "qwen": {"correct": 111, "count": 298, "accuracy": 0.3724832214765101}
+  },
+  "ruler_reduced_4_per_task": {
+    "4096": {"p11": 84.48692307692308, "qwen": 88.46153846153847},
+    "8192": {"p11": 76.15384615384616, "qwen": 88.26923076923077},
+    "16384": {"p11": 65.96153846153847, "qwen": 86.34615384615384},
+    "32768": {"p11": 60.19230769230769, "qwen": 85.0323076923077},
+    "65536": {"p11": 53.97461538461538, "qwen": 84.35923076923078},
+    "131072": {"p11": 49.871538461538464, "qwen": 78.36538461538461}
+  },
+  "p10_joint_recovery": {
+    "status": "PASS_PROVISIONAL",
+    "full_dev_cross_entropy": 2.389680047457615,
+    "formal_status": "TITAN_FP16_PROVISIONAL_PENDING_NATIVE_BF16_REPLAY"
+  },
+  "p12_disclosure": "ATTEMPTED_FROZEN_EVAL_NO_GO_NOT_PROMOTED",
+  "raw_evidence_sha256": {
+    "mmlu_p11": "e1b6abf8045bdfa89df677f78713b857b4efe035d20d5e8c319a0d5b482004ac",
+    "mmlu_qwen": "80151d47b2be3ae6215df28fd7fab2b646a8e2c308e5755eb6b1674c25a4f097",
+    "wikitext103_p11": "6b8ad265c21dc1d1f20655d17b755cd47a95c5644bf18c4113eeae517d0d421e",
+    "wikitext103_qwen": "69a47bd93bd036065e95c99f9a13c69bfbf660cea4c91555b51f9c520ff520ba",
+    "longbench_v2_p11": "87507ab4a9f25f68af4069cdc33d2020f118d9022128a8ce98d7b6b56884b3ac",
+    "longbench_v2_qwen": "24a92c686880cd8accdb02634e4eda14528c3b055c004b0c437e3e7bbaf761c7"
+  }
+}

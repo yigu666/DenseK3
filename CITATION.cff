@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use DenseK3-4B, please cite this release."
+title: "DenseK3-4B: A Qwen3.5-initialized Dense Kimi K3-style 4B language model"
+type: software
+version: "0.1.0"
+date-released: 2026-09-16
+repository-code: "https://github.com/yigu666/DenseK3"
+url: "https://github.com/yigu666/DenseK3"
+license: Apache-2.0
+abstract: >-
+  A staged white-box migration of Qwen3.5-4B-Base into a dense K3-style language
+  model with KDA, strict-NoPE MLA, true latent cache, Block AttnRes, and SiTU-GLU.
+authors:
+  - name: yigu666
+  - name: DenseK3 contributors
+keywords:
+  - DenseK3
+  - KDA
+  - MLA
+  - model migration
+  - knowledge distillation
+  - long-context

@@ -1,0 +1,105 @@
+stage: P11.5a
+status: FROZEN_EXECUTION_CONTRACT
+amendment: P11_5A_PROBE_CONTRACT_2026_08_21
+
+source:
+  checkpoint: outputs/densek3-core/checkpoints/p10-t/densek3-4b-core-k3-joint-reduced-titan
+  source_status: TITAN_FP16_PROVISIONAL
+  canonical_p10_status: PENDING_NATIVE_BF16_FULL_SCOPE_RETRAIN
+  p10_t_full_dev_ce: 2.38968004745761
+
+main_training:
+  denominator_tokens: 262144
+  qwen_exact_opd_tokens: 157286
+  raw_lm_tokens: 104858
+  qwen_share: 0.60
+  raw_lm_share: 0.40
+  kimi_tokens_in_denominator: false
+
+kimi:
+  mode: SPARSE_HIGH_INFORMATION_CROSS_TOKENIZER_CORRECTION
+  maximum_review_attempts: 64
+  maximum_attempts_per_domain: 16
+  waves_at_main_tokens: [0, 65536, 131072, 196608]
+  attempts_per_wave: 16
+  attempts_per_domain_per_wave: 4
+  loss_reduction: PER_TRAJECTORY_MEAN_TARGET_CE
+  reasoning_effort: low
+  reasoning_content_persisted: false
+  reasoning_content_trained: false
+  automatic_retries: 0
+  minimum_request_interval_seconds: 21
+  review_max_completion_tokens: 768
+  p11_cumulative_api_hard_cap_cny: 5.0
+  daily_api_hard_cap_cny: 20.0
+  api_budget_precedence: HARD_CAP_OVERRIDES_REVIEW_COUNT
+
+optimization:
+  scope: P10_T_REDUCED_SCOPE
+  expected_gradient_tensors: 563
+  expected_unexpected_gradient_tensors: 0
+  lora_rank: 8
+  lora_alpha: 16.0
+  lora_dropout: 0.0
+  lora_learning_rate: 1.0e-5
+  lora_weight_decay: 0.01
+  direct_learning_rate: 2.5e-6
+  direct_weight_decay: 0.0
+  warmup_ratio: 0.10
+  minimum_learning_rate_ratio: 0.10
+  gradient_clip_norm: 1.0
+  gradient_checkpointing: true
+  fp32_master_parameters: true
+  titan_dtype: fp16
+  fp16_initial_loss_scale: 1024.0
+  fp16_loss_scale_growth_interval: 2000
+  fp16_loss_scale_amendment: P11_5A_TITAN_ACCUMULATION_NUMERICS_2026_08_22
+  fresh_optimizer: true
+  update_buckets_per_wave: 16
+  stream_loss_weights:
+    qwen: 0.36
+    raw_lm: 0.24
+    kimi: 0.40
+  stream_loss_weight_derivation: LEGACY_40_PERCENT_KIMI_PLUS_RENORMALIZED_60_PERCENT_MAIN_STREAM
+
+gpu_start_gate:
+  amendment: P11_5A_TITAN_MEMORY_ENVELOPE_GATE_2026_08_23
+  mode: HISTORICAL_PEAK_PLUS_SAFETY_MARGIN
+  requires_gpu_idle: false
+  historical_peak_memory_mib: 8970
+  safety_margin_mib: 6144
+  required_free_memory_mib: 15114
+  maximum_start_temperature_c: 75
+
+qwen_rollout:
+  maximum_prompt_tokens: 256
+  selection_candidate_tokens: 16
+  selection_candidates_per_domain: 12
+  long_trajectory_tokens: 512
+  eos_terminates_trajectory: true
+  advantage_clip: 5.0
+  teacher_backend: HF_TORCH_GDN_REFERENCE
+
+evaluation:
+  checkpoints_main_tokens: [0, 65536, 131072, 196608, 262144]
+  intermediate_full_dev_forbidden: true
+  closeout_full_dev_only: true
+  raw_lm_full_dev_ce_max: 2.41968004745761
+  general_capability_material_regression_tolerance: 0.05
+  heldout_accessed: false
+
+forbidden:
+  architecture_change: true
+  heldout_access: true
+  long_context: true
+  math_specialist: true
+  code_specialist: true
+  custom_kda_backward: true
+  truncated_kda_backward: true
+  kimi_reasoning_persistence: true
+  automatic_api_retry: true
+  intermediate_full_dev: true
+
+next_stage:
+  p11_6_phase1_allowed: false
+  p12_titan_migration_allowed: false

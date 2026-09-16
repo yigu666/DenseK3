@@ -1,0 +1,127 @@
+stage: P11.6
+status: FROZEN_EXECUTION_CONTRACT
+contract: P11_6_FAST_GENERAL_DUAL_TEACHER_OPD_2026_08_24
+mode: FAST_GENERAL_DUAL_TEACHER_OPD
+
+source:
+  checkpoint: outputs/densek3-core/checkpoints/p11-t/probe-256k/main-tokens-262144
+  required_p11_5a_status: PASS
+  required_global_optimizer_step: 64
+  required_gradient_tensors: 563
+  exact_optimizer_resume: true
+  exact_scaler_resume: true
+  exact_rng_resume: true
+  lora_reinitialization: false
+
+main_training:
+  source_cumulative_tokens: 262144
+  target_cumulative_tokens: 1048576
+  new_tokens: 786432
+  new_qwen_exact_opd_tokens: 471859
+  new_raw_lm_tokens: 314573
+  kimi_tokens_in_denominator: false
+  update_bucket_tokens: 4096
+  new_update_buckets: 192
+  chunks: 12
+  tokens_per_chunk: 65536
+
+schedule:
+  source_optimizer_steps: 64
+  target_optimizer_steps: 256
+  mode: CONTINUATION_COSINE_FROM_PERSISTED_LR_TO_ORIGINAL_MINIMUM
+  boundary_learning_rate_jump_allowed: false
+  warmup_restart: false
+  optimizer_restart: false
+
+kimi:
+  mode: SPARSE_HIGH_INFORMATION_CROSS_TOKENIZER_CORRECTION
+  refresh_start_main_tokens: [262144, 655360]
+  maximum_attempts_per_refresh: 64
+  maximum_new_attempts: 128
+  attempts_per_domain: 16
+  rolling_review_window: 16
+  reasoning_effort: low
+  automatic_retries: 0
+  minimum_request_interval_seconds: 21
+  review_max_completion_tokens: 768
+  p11_cumulative_api_hard_cap_cny: 15.0
+  daily_api_hard_cap_cny: 20.0
+  minimum_forced_attempts: 0
+  early_stop:
+    logic: ALL_THREE_CONDITIONS_REQUIRED
+    correction_rate_lt: 0.15
+    trivial_correction_fraction_gte: 0.75
+    keep_rate_gte: 0.80
+    zero_corrections_is_vacuously_trivial: true
+
+optimization:
+  scope: P10_T_REDUCED_SCOPE_UNCHANGED
+  expected_gradient_tensors: 563
+  lora_rank: 8
+  lora_alpha: 16.0
+  lora_dropout: 0.0
+  lora_learning_rate: 1.0e-5
+  lora_weight_decay: 0.01
+  direct_learning_rate: 2.5e-6
+  direct_weight_decay: 0.0
+  minimum_learning_rate_ratio: 0.10
+  gradient_clip_norm: 1.0
+  fp32_master_parameters: true
+  refresh_fp32_masters_after_snapshot_restore: true
+  titan_dtype: fp16
+  fp16_initial_loss_scale: 1024.0
+  fp16_loss_scale_growth_interval: 2000
+  stream_loss_weights:
+    qwen: 0.36
+    raw_lm: 0.24
+    kimi: 0.40
+
+gpu_start_gate:
+  amendment: P11_6_FAST_TITAN_MEMORY_ONLY_GATE_2026_08_25
+  mode: HISTORICAL_PEAK_PLUS_USER_APPROVED_MEMORY_ONLY_MARGIN
+  historical_peak_memory_mib: 8970
+  safety_margin_mib: 3072
+  required_free_memory_mib: 12042
+  temperature_diagnostic_only: true
+  concurrent_gpu_compute_allowed: true
+  user_approved: true
+
+runtime_audits:
+  gradient_steps: [64, 160, 256]
+  frozen_kda_main_tokens: [262144, 655360, 1048576]
+  compensation_high_stops_run: true
+  recovery_checkpoint_main_tokens: [393216, 524288, 655360, 786432, 917504, 1048576]
+  intermediate_full_dev_forbidden: true
+  intermediate_general_capability_forbidden: true
+  intermediate_merge_reload_forbidden: true
+  intermediate_generation_forbidden: true
+
+final_evaluation:
+  compare_models: [P10_T, P11_5A_256K, P11_6_1M]
+  full_dev_ce_max: 2.41968004745761
+  general_composite_baseline: 0.65625
+  fixed_teacher_audit: true
+  closeout_selected_checkpoint_only: true
+  merge_reload_required: true
+  runtime_lora_absent_required: true
+  cache_required: true
+  generation_required: true
+
+forbidden:
+  heldout_access: true
+  architecture_change: true
+  scope_change: true
+  rank_change: true
+  loss_change: true
+  api_selector_change: true
+  intermediate_capability_eval: true
+  p11_7: true
+  automatic_2m_extension: true
+  long_context: true
+  math_specialist: true
+  code_specialist: true
+
+next_stage:
+  p11_6_2m_automatically_allowed: false
+  p11_7_allowed: false
+  p12_long_context_allowed: false

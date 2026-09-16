@@ -1,0 +1,68 @@
+stage: P6.1c
+status: FROZEN
+
+source:
+  checkpoint: outputs/densek3-core/checkpoints/p5/densek3-4b-k3-decay-silu-i1
+  p6_1_report: outputs/densek3-core/manifests/p6/p6-single-layer-probe.json
+  p6_1b_report: outputs/densek3-core/manifests/p6/p6-1b/p6-1b-attribution.json
+  required_p6_1b_dominant: LOW_RANK_CAPACITY
+  required_p6_1b_secondary: LATENT_NORMALIZATION
+
+scope:
+  probe_layer: 3
+  rank: 512
+  no_pe: true
+  split_q_gate: true
+  qk_norm: false
+  training: false
+  other_layers_unchanged: true
+  scale_to_all_8_layers: false
+  true_latent_cache: false
+  heldout_accessed: false
+
+calibration:
+  split: train
+  sequence_indices: [0, 1, 2, 3, 4, 5, 6, 7]
+  sequence_length: 2048
+  selection_token_prefix: 256
+  covariance_dtype: float32
+  factorization_dtype: float32
+  deterministic_exact: true
+
+cases:
+  C0: {factorization: weight_svd, latent_norm: ones, frozen_anchor: true}
+  C1: {factorization: weight_svd, latent_norm: scale_matched, frozen_anchor: false}
+  C2: {factorization: activation_weighted_svd, latent_norm: ones, frozen_anchor: false}
+  C3: {factorization: activation_weighted_svd, latent_norm: scale_matched, frozen_anchor: false}
+
+selection:
+  candidates: [C1, C2, C3]
+  metrics_priority:
+    - layer3_mixer_relative_l2
+    - attention_output_relative_l2
+    - post_residual_relative_l2
+    - final_hidden_cosine
+    - logits_cosine
+    - calibration_ce
+  canonical_used_for_selection: false
+  unique_full_dev_candidate: true
+
+gate:
+  mixer_relative_l2_max: 0.45
+  b_to_candidate_full_dev_ce_delta_max: 0.01
+  preferred_full_dev_ce_delta_max: 0.0075
+  generation_stable_required: true
+  finite_required: true
+  final_hidden_cosine_must_improve_vs_c0: true
+  logits_cosine_must_improve_vs_c0: true
+
+forbidden:
+  training: true
+  optimizer: true
+  checkpoint_write: true
+  rank_change: true
+  qk_norm_bridge: true
+  conversion_of_other_gqa_layers: true
+  true_latent_cache: true
+  heldout_access: true
+  gate_change: true

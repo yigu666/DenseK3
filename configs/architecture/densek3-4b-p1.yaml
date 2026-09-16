@@ -1,0 +1,153 @@
+schema_version: 1
+status: p1_architecture_locked
+
+model:
+  model_type: densek3
+  scope: text_only
+  vocab_size: 248320
+  hidden_size: 2560
+  intermediate_size: 9216
+  num_hidden_layers: 32
+  rms_norm_eps: 1.0e-6
+  initializer_range: 0.02
+  tie_word_embeddings: true
+  dtype: bfloat16
+  max_position_embeddings: 262144
+
+source:
+  model: Qwen3.5-4B-Base
+  revision: 1001bb4d826a52d1f399e183466143f4da7b741b
+  checkpoint_weight_entries: 738
+  text_weight_entries: 426
+  excluded_vision_entries: 297
+  excluded_mtp_entries: 15
+  source_norm_parameterization: one_plus_weight
+  target_norm_parameterization: multiplicative_weight
+
+layers:
+  stage: p4
+  layer_types:
+    - kda
+    - kda
+    - kda
+    - gqa
+    - kda
+    - kda
+    - kda
+    - gqa
+    - kda
+    - kda
+    - kda
+    - gqa
+    - kda
+    - kda
+    - kda
+    - gqa
+    - kda
+    - kda
+    - kda
+    - gqa
+    - kda
+    - kda
+    - kda
+    - gqa
+    - kda
+    - kda
+    - kda
+    - gqa
+    - kda
+    - kda
+    - kda
+    - gqa
+
+kda:
+  qk_num_heads: 16
+  value_num_heads: 32
+  qk_head_dim: 128
+  value_head_dim: 128
+  short_conv_kernel_size: 4
+  decay_projection_rank: 128
+  qk_l2norm: true
+  beta_activation: sigmoid
+  allow_negative_eigenvalues: false
+  output_gate_rank: null
+  output_gate_bias: false
+  recurrent_state_dtype: float32
+  recurrent_state_layout: v_first
+  backends:
+    training: fla_chunk
+    short_inference: fla_fused_recurrent
+  p4_bridge:
+    decay_parameterization: unbounded_softplus
+    lower_bound: null
+    output_gate_activation: silu
+  p5_target:
+    decay_parameterization: lower_bounded_sigmoid
+    lower_bound: -5.0
+    output_gate_activation: sigmoid
+
+gqa_p4:
+  num_heads: 16
+  num_key_value_heads: 4
+  head_dim: 256
+  output_gate: true
+  output_gate_activation: sigmoid
+  attention_bias: false
+  attention_dropout: 0.0
+  rope:
+    type: default
+    theta: 10000000.0
+    partial_rotary_factor: 0.25
+    rotary_dim: 64
+    mrope_interleaved: true
+    mrope_section: [11, 11, 10]
+
+mla_p6:
+  position_encoding: none
+  num_heads: 16
+  q_lora_rank: null
+  kv_lora_rank: 512
+  qk_nope_head_dim: 256
+  qk_pos_head_dim: 0
+  value_head_dim: 256
+  output_gate_rank: null
+  output_gate_bias: false
+  output_gate_activation: sigmoid
+  reference_backend: pytorch_sdpa
+  cache_modes:
+    p6: expanded_reference
+    p7: true_latent
+
+attnres_p8:
+  enabled: false
+  block_size_unit: transformer_layers
+  block_layers: 4
+  expected_complete_blocks: 8
+  include_embedding_source: true
+  pseudo_query_init: zeros
+  norm_weight_init: ones
+  operator_accumulation_dtype: float32
+  initialization_is_residual_equivalent: false
+
+ffn:
+  gate_projection_size: 9216
+  up_projection_size: 9216
+  bias: false
+  p4_activation: silu_glu
+  p9_activation: situ_glu
+  situ_beta: 4.0
+  situ_linear_beta: 25.0
+
+cache:
+  kda:
+    conv_state_split: [q, k, v]
+    recurrent_state_shape: [batch, 32, 128, 128]
+  gqa_bytes_per_token_all_layers_bf16: 32768
+  mla_latent_bytes_per_token_all_layers_bf16: 8192
+  mla_target_cache_reduction: 0.75
+
+excluded_through_p10:
+  - vision_tower
+  - multimodal_projector
+  - mtp
+  - flash_kda_compiled_backend

@@ -1,0 +1,85 @@
+stage: P6.3-P6.4
+status: FROZEN
+
+source:
+  p5_checkpoint: outputs/densek3-core/checkpoints/p5/densek3-4b-k3-decay-silu-i1
+  candidate: outputs/densek3-core/checkpoints/p6/densek3-4b-8mla-c3-qk-norm-calibrated-candidate
+  p6_2d_report: outputs/densek3-core/manifests/p6/p6-2d/p6-2d-scaleout.json
+  local_artifact: outputs/densek3-core/artifacts/p6/p6-2d-local/p6-2d-eight-layer-best-trainable.safetensors
+  p6_2c_artifact: outputs/densek3-core/artifacts/p6/p6-2c-pilot/p6-2c-best-trainable.safetensors
+  candidate_manifest_sha256: ba75e3e5b4df6658f92fab9122a0bc4bd1785ba25cce9e1b0900e94d898ce00f
+  candidate_config_sha256: 707223f794dc439e159e355cdbf7db70b44f68c4169ab35c3174363208c56293
+  candidate_index_sha256: 92675f5400e88968512e3798ea3369706499e13fbf8c6c8d233160ac3f03a124
+  p6_2d_report_sha256: bf609e382f5e758e459da603c63003a2fcf72f6152dc5d9b9f45182944e74f36
+  local_artifact_sha256: c97021a41c80d864b7fadc04d6ed9246788b61de95af2c351f0de43cc58f9acc
+
+architecture:
+  topology: 24_KDA_PLUS_8_NOPE_MLA
+  mla_layers: [3, 7, 11, 15, 19, 23, 27, 31]
+  kv_lora_rank: 512
+  q_lora_rank: null
+  qk_nope_head_dim: 256
+  qk_pos_head_dim: 0
+  value_head_dim: 256
+  position_encoding: none
+  qk_norm_semantics: PRESERVE_DONOR_QK_RMSNORM
+  latent_norm: SCALE_MATCHED_RMSNORM
+  output_gate: sigmoid
+  cache_mode: expanded_reference
+  true_latent_cache: false
+
+selection:
+  per_layer_best_steps:
+    3: 128
+    7: 128
+    11: 0
+    15: 0
+    19: 256
+    23: 96
+    27: 128
+    31: 256
+  trained_step_zero_allowed: true
+  post_heldout_modification_allowed: false
+
+capability:
+  full_dev:
+    sequences: 97
+    p5_ce: 2.306309482533407
+    expected_p6_ce: 2.388353744119985
+    replay_absolute_tolerance: 1.0e-6
+    maximum_delta: 0.15
+    evaluation_count: 1
+  heldout:
+    sequences: 97
+    p5_ce: 2.256999880997
+    maximum_delta: 0.15
+    evaluation_count: 1
+    unique_candidate: true
+  canonical_role: diagnostic_only
+  canonical_accessed: false
+
+engineering:
+  expected_tensor_count: 562
+  expected_parameter_count: 4226431232
+  bf16_forward_required: true
+  indexed_vs_public_reload_exact: true
+  generation_categories: 5
+  generation_not_collapsed_required: true
+  expanded_reference_cache_required: true
+  cache_cases: [[1, 1], [7, 1], [32, 1]]
+  cache_standard_bf16_rtol: 0.006
+  cache_standard_bf16_atol: 0.006
+  cache_numerical_fallback_allowed: false
+  hash_and_provenance_required: true
+  freeze_in_place_without_weight_rewrite: true
+
+forbidden:
+  training: true
+  optimizer: true
+  mla_weight_modification: true
+  checkpoint_reselection: true
+  heldout_reuse_for_selection: true
+  gate_change: true
+  numerical_amendment: true
+  true_latent_cache: true
+  p7_allowed_before_final_pass: true

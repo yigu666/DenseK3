@@ -1,0 +1,56 @@
+stage: TITAN_P7_TRUE_LATENT_CACHE
+status: FROZEN_EXECUTION_CONTRACT
+
+source:
+  checkpoint: outputs/densek3-core/checkpoints/p6/densek3-4b-8mla-c3-qk-norm-calibrated-candidate
+  p6_titan_closeout: titan/manifests/reproduction/p6/p6-titan-compatibility-closeout.json
+
+architecture:
+  topology: 24_KDA_PLUS_8_MLA
+  mla_layers: [3, 7, 11, 15, 19, 23, 27, 31]
+  probe_layers: [3, 23]
+  kv_lora_rank: 512
+  position_encoding: none
+  qk_norm_preserved: true
+  latent_norm_preserved: true
+  persistent_cache_tensor: POST_LATENT_RMSNORM_PRE_KV_B
+  temporary_kv_reconstruction: true
+  persistent_expanded_kv_allowed: false
+
+execution:
+  dtype: float16
+  training: false
+  optimizer: false
+  heldout_accessed: false
+  canonical_bf16_claim: false
+  single_layer_cases: [[7, 1], [7, 8], [65, 1], [65, 8]]
+  full_model_cases:
+    - {batch: 1, prefill: 1, decode: 8}
+    - {batch: 1, prefill: 7, decode: 16}
+    - {batch: 1, prefill: 65, decode: 32}
+    - {batch: 2, prefill: 16, decode: 8}
+    - {batch: 1, prefill: 512, decode: 1}
+  memory_contexts: [128, 512, 2048]
+  memory_prefill_chunk_size: 128
+  optional_memory_context: 8192
+  optional_memory_context_required: false
+
+compatibility:
+  source_contract: titan/configs/p6-titan-fp16-cache-compat-2026-08-19-01.yaml
+  standard_allclose_first: true
+  no_new_numerical_envelope: true
+
+memory:
+  expected_expanded_mla_bytes_per_token: 131072
+  expected_latent_mla_bytes_per_token: 8192
+  expected_expanded_to_latent_reduction: 0.9375
+  expected_p5_gqa_bytes_per_token: 32768
+  expected_p5_gqa_to_latent_reduction: 0.75
+
+final:
+  titan_pass_marker: TITAN_P7_TRUE_LATENT_CACHE=PASS
+  titan_compatibility_marker: TITAN_P7_FP16_COMPATIBILITY=PASS
+  canonical_status: PENDING_NATIVE_BF16_REPLAY
+  canonical_frozen: false
+  p8_titan_migration_allowed_on_pass: true
+  p8_canonical_allowed: false

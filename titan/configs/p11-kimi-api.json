@@ -1,0 +1,17 @@
+{
+  "api_key_env": "MOONSHOT_API_KEY",
+  "base_url": "https://api.moonshot.cn/v1/chat/completions",
+  "cached_input_cny_per_million": 2.0,
+  "daily_budget_cny": 20.0,
+  "input_cny_per_million": 20.0,
+  "logprobs": false,
+  "max_retries": 0,
+  "model": "kimi-k3",
+  "output_cny_per_million": 100.0,
+  "per_call_upper_bound_cny": 0.25,
+  "reasoning_effort": "low",
+  "teacher_signal": "TEXT_SPACE_TRAJECTORY_ONLY",
+  "teacher_loading": "API_ONLY_NO_LOCAL_WEIGHTS",
+  "timeout_seconds": 120,
+  "top_logprobs": 0
+}

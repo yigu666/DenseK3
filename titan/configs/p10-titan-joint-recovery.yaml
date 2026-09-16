@@ -1,0 +1,68 @@
+stage: TITAN_P10_CORE_K3_JOINT_RECOVERY
+status: FROZEN_EXECUTION_CONTRACT
+
+source:
+  p9_candidate: outputs/densek3-core/checkpoints/p9/densek3-4b-core-k3-situ-titan
+  p9_full_dev_ce: 2.4122162371468154
+  p8_zero_full_dev_ce: 2.388292977200396
+
+architecture:
+  modification_allowed: false
+  kda_layers: 24
+  mla_layers: 8
+  mla_rank: 512
+  nope: true
+  qk_rmsnorm: true
+  true_latent_cache: true
+  attnres_sites: 65
+  situ_beta: 4.0
+  situ_linear_beta: 25.0
+
+optimization:
+  objective: causal_lm_ce_only
+  optimizer: adamw
+  lora_rank: 8
+  lora_alpha: 16
+  lora_dropout: 0.0
+  lora_learning_rate: 2.0e-5
+  lora_weight_decay: 0.01
+  direct_learning_rate: 5.0e-6
+  direct_weight_decay: 0.0
+  warmup_ratio: 0.10
+  minimum_learning_rate_ratio: 0.10
+  gradient_clip_norm: 1.0
+  gradient_checkpointing: true
+  titan_dtype: fp16
+  fp32_master_parameters: true
+  seed: 20260820
+
+data:
+  root: data/p5-probe
+  sequence_length: 2048
+  train_sequence_range: [0, 512]
+  recovery_validation_split: dev
+  recovery_validation_sequence_range: [0, 8]
+  heldout_accessed: false
+
+budget:
+  initial_effective_tokens: 262144
+  maximum_effective_tokens: 1048576
+  phase1_evaluation_tokens: [0, 65536, 131072, 262144]
+  extension_evaluation_tokens: [524288, 1048576]
+  one_time_extension_only: true
+
+selection:
+  primary: recovery_validation_ce
+  step_zero_is_safety_only: true
+  pass_requires_effective_tokens_gt_zero: true
+  attnres_active_required: true
+  full_dev_ce_pass_max: 2.4122162371468154
+  full_dev_ce_strong_pass_max: 2.388292977200396
+
+forbidden:
+  heldout: true
+  distillation: true
+  long_context: true
+  rank_sweep: true
+  architecture_change: true
+  runtime_lora: true

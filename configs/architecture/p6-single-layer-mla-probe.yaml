@@ -1,0 +1,58 @@
+stage: P6.0-P6.1
+status: FROZEN
+
+source:
+  checkpoint: outputs/densek3-core/checkpoints/p5/densek3-4b-k3-decay-silu-i1
+  initialization_report: outputs/densek3-core/manifests/p5/rethink-v3/p5-rethink-v3-initialization-probe.json
+  freeze_report: outputs/densek3-core/manifests/p5/i1-closeout/p5-i1-freeze-report.json
+  p5_final_required: true
+  architecture: K3_DECAY_PLUS_SILU
+  initialization: RETENTION_MATCHED_ANALYTIC
+
+scope:
+  probe_layer: 3
+  other_layers_unchanged: true
+  converted_layers: 1
+  training: false
+  scale_to_all_8_layers: false
+
+cases:
+  A: GQA_PARTIAL_ROPE
+  B: FULL_RANK_ATTENTION_NOPE
+  C: RANK512_MLA_NOPE
+
+mla:
+  heads: 16
+  q_lora_rank: null
+  kv_lora_rank: 512
+  qk_nope_head_dim: 256
+  qk_pos_head_dim: 0
+  value_head_dim: 256
+  position_encoding: none
+  output_gate: full_rank_sigmoid
+  output_gate_bias: false
+  kv_a_layernorm_init: ones
+  q_norm: excluded
+  k_norm: excluded
+  cache_mode: expanded_reference
+  true_latent_cache: false
+
+evaluation:
+  canonical: diagnostic
+  full_dev_sequences: 97
+  generation_prompts: 5
+  primary_decision: measurement_review
+  automatic_scale_gate: false
+  baseline_replay:
+    canonical_ce_abs_tolerance: 0.0005
+    full_dev_ce_abs_tolerance: 0.0005
+    generation_tokens_exact: true
+
+forbidden:
+  training: true
+  optimizer: true
+  checkpoint_write: true
+  convert_other_gqa_layers: true
+  true_latent_cache: true
+  p5_mutation: true
+  numerics_amendment: true

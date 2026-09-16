@@ -1,0 +1,80 @@
+stage: P11-T
+mode: GENERAL_DUAL_TEACHER_ON_POLICY_DISTILLATION
+source: P10_T_FROZEN
+canonical_p10_status: PENDING_NATIVE_BF16_FULL_SCOPE_RETRAIN
+cost_amendment: P11_COST_AMENDMENT_2026_08_21
+
+teachers:
+  qwen:
+    mode: SAME_TOKENIZER_EXACT_TOKEN_OPD
+    advantage_clip: 5.0
+  kimi:
+    mode: CROSS_TOKENIZER_TEXT_SPACE_TRAJECTORY_OPD
+    loading: API_ONLY_NO_LOCAL_WEIGHTS
+    model: kimi-k3
+    endpoint: https://api.moonshot.cn/v1/chat/completions
+    api_key_env: MOONSHOT_API_KEY
+    output_logprobs: false
+    runtime_limitation: OUTPUT_LOGPROBS_UNSUPPORTED
+    teacher_signal: TEXT_SPACE_TRAJECTORY_ONLY
+    qwen_exact_token_logits_unchanged: true
+    top_logprobs: 0
+    reasoning_effort: low
+    daily_budget_cny: 20.0
+    per_call_upper_bound_cny: 0.25
+    responses: [KEEP, CORRECTED_RESPONSE]
+
+data:
+  main_signal_share_unit: SUPERVISED_TOKENS
+  main_signal_shares:
+    qwen: 0.60
+    raw_lm: 0.40
+  kimi_signal_unit: REVIEWED_ON_POLICY_TRAJECTORIES
+  kimi_fixed_supervised_token_share_disabled: true
+  kimi_selection: HIGH_INFORMATION_STUDENT_TRAJECTORIES
+  heldout_access: false
+
+cost_calibration:
+  required: true
+  review_count: 24
+  domains: 4
+  reviews_per_domain: 6
+  candidate_pool_per_domain: 12
+  rollout_tokens: 16
+  reasoning_effort: low
+  auto_retry: false
+  reasoning_content_trained: false
+  structured_output: JSON_SCHEMA
+  max_completion_tokens: 768
+  api_budget_cap_cny: 5.0
+  daily_api_hard_cap_cny: 20.0
+
+optimization:
+  trainable_scope: P10_T_REDUCED_SCOPE
+  kda_recurrent_core_frozen: true
+  lora_rank: 8
+  lora_alpha: 16
+  lora_dropout: 0.0
+  lora_lr: 1.0e-5
+  direct_lr: 2.5e-6
+  grad_clip: 1.0
+  fresh_optimizer: true
+
+budgets:
+  probe: 262144
+  phase1: 2097152
+  phase2: 8388608
+  maximum: 16777216
+
+probe_signal_contract:
+  qwen_opd_share: 0.60
+  raw_lm_share: 0.40
+  kimi_mode: SPARSE_CORRECTIVE_SIDE_STREAM
+  kimi_api_budget_cap_cny: 5.0
+
+forbidden:
+  - math_specialist
+  - code_specialist
+  - long_context_training
+  - custom_kda_backward
+  - heldout_access
