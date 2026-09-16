@@ -2,9 +2,9 @@
 
 **[English](README.md) | [中文](README_zh.md)**
 
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-green.svg)](LICENSE) [![Model: DenseK3-4B](https://img.shields.io/badge/Hugging%20Face-DenseK3--4B-yellow.svg)](https://huggingface.co/yigu666/DenseK3-4B)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-green.svg)](LICENSE) [![Model: DenseK3-4B](https://img.shields.io/badge/Hugging%20Face-DenseK3--4B-yellow.svg)](https://huggingface.co/qinfu19/DenseK3)
 
-🤗 **Model release:** [qinfu19/DenseK3-4B]((https://huggingface.co/qinfu19/DenseK3))
+🤗 **Model release:** [qinfu19/DenseK3](https://huggingface.co/qinfu19/DenseK3)
 
 DenseK3 is an independent research project exploring whether a dense language
 model can inherit Kimi K3-style recurrent/attention ideas while retaining the
@@ -201,7 +201,7 @@ Download the standalone model to a project/data disk and run deterministic greed
 decoding. No donor checkpoint is required:
 
 ```bash
-hf download yigu666/DenseK3-4B \
+hf download qinfu19/DenseK3 \
   --local-dir models/DenseK3-4B \
   --repo-type model
 ```
@@ -213,7 +213,7 @@ The exported model uses custom Transformers code and Flash Linear Attention
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-model_id = "yigu666/DenseK3-4B"
+model_id = "qinfu19/DenseK3"
 tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(
     model_id,
@@ -273,7 +273,7 @@ DenseK3/
 ```
 
 The standalone model is published separately as
-[`yigu666/DenseK3-4B`](https://huggingface.co/yigu666/DenseK3-4B). The separately
+[`qinfu19/DenseK3`](https://huggingface.co/qinfu19/DenseK3). The separately
 prepared delta payload is an audit artifact over its reproduced parent, not a
 second public model product. Donor weights, datasets, optimizer state,
 credentials, private caches, and noncanonical checkpoints are not committed to

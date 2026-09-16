@@ -2,7 +2,7 @@
 
 Audit date: 2026-09-16  
 Audited tree: `open_source_release/github`  
-Release target: GitHub `yigu666/DenseK3` and Hugging Face `yigu666/DenseK3-4B`
+Release target: GitHub `yigu666/DenseK3` and Hugging Face `qinfu19/DenseK3`
 
 This audit covers the final staged source and standalone model package. It is a
 release-readiness audit, not new training, checkpoint selection, or benchmarking.
@@ -191,7 +191,7 @@ security scans must distinguish these explanatory words from credential values.
 
 No private account name, supplied SSH address, password, or private hostname occurs
 in the staged public tree. The release target's public GitHub handle `yigu666` is
-not private metadata. The public Hugging Face handle is also `yigu666`.
+not private metadata. The public Hugging Face handle is `qinfu19`.
 
 ## 16. Large generated artifacts — PASS
 
@@ -266,8 +266,8 @@ clean-room parity result in `release/RELEASE_VALIDATION.md`.
 
 ## Metadata still required from the maintainer
 
-- Hugging Face namespace: `NEEDS_USER_METADATA`.
+- Hugging Face namespace: `qinfu19` (published repository: `qinfu19/DenseK3`).
 - Preferred author name(s), ORCID(s), and contact for `CITATION.cff`:
-  `NEEDS_USER_METADATA` (the public handle `yigu666` can be used provisionally).
+  `NEEDS_USER_METADATA` (the GitHub project handle `yigu666` can be used provisionally).
 - Confirmation of any non-obvious copied/adapted third-party implementation and its
   exact upstream revision: `NEEDS_USER_METADATA`.

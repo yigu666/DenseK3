@@ -92,9 +92,10 @@ one technical home under `docs/` or `release/`.
 All currently used repository-relative links in the targeted public entry points
 (`README*.md`, `MODEL_CARD.md`, and the standalone HF cards) resolve to files that
 exist, including `docs/*`, `release/*`, `LICENSE`, `NOTICE`, and
-`THIRD_PARTY_NOTICES.md`. The public GitHub and Hugging Face URLs are intentional
-publication targets, but the HF model URL is not verifiable until the maintainer
-uploads `yigu666/DenseK3-4B`. Historical architecture audit pages retain links to
+`THIRD_PARTY_NOTICES.md`. The current publication targets are GitHub
+`yigu666/DenseK3` and Hugging Face `qinfu19/DenseK3`; live availability is an
+external state and is not re-fetched by this documentation audit. Historical
+architecture audit pages retain links to
 local reference PDFs that are intentionally excluded from the public tree; those
 pages are not linked as release entry points and are outside this link claim.
 
@@ -112,7 +113,7 @@ pages are not linked as release entry points and are outside this link claim.
 - The export/parity commands in `docs/REPRODUCIBILITY.md` are the authoritative
   release commands and should be linked rather than duplicated in full.
 - HF loading must keep `trust_remote_code=True`, install the pinned dependencies,
-  and use the standalone `yigu666/DenseK3-4B` repository; it must not require a
+  and use the standalone `qinfu19/DenseK3` repository; it must not require a
   GitHub clone or a donor/P10/P11 checkpoint.
 
 ## 8. Metadata corrections required

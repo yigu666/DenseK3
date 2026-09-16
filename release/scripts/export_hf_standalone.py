@@ -206,7 +206,7 @@ def _load_callable(spec: str) -> Any:
 
 
 def _model_card(namespace: str) -> str:
-    model_id = f"{namespace}/DenseK3-4B"
+    model_id = f"{namespace}/DenseK3"
     return f"""---
 model_name: DenseK3-4B
 library_name: transformers
@@ -369,7 +369,7 @@ third-party materials retain their upstream terms; preserve the GitHub notices.
 
 
 def _model_card_zh(namespace: str) -> str:
-    model_id = f"{namespace}/DenseK3-4B"
+    model_id = f"{namespace}/DenseK3"
     return f"""---
 model_name: DenseK3-4B
 library_name: transformers
@@ -533,7 +533,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--loader", default="evaluation.model_loader:load_p11")
-    parser.add_argument("--hf-namespace", default="yigu666")
+    parser.add_argument("--hf-namespace", default="qinfu19")
     parser.add_argument("--max-shard-size", default="4GB")
     return parser.parse_args()
 

@@ -74,7 +74,10 @@ numeric threshold, top-1 identity, and top-5 set.
 
 ## Upload gates
 
-The GitHub tree and Hugging Face directory are prepared locally under the
-release staging area. No remote GitHub push or Hugging Face upload is performed
-by this task. Review `RELEASE_SCOPE.md`, `MODEL_CARD.md`, `NOTICE`, and
-`THIRD_PARTY_NOTICES.md`, then follow the commands in the top-level README.
+The maintainer publication targets are GitHub
+`https://github.com/yigu666/DenseK3` and Hugging Face
+`https://huggingface.co/qinfu19/DenseK3`. The GitHub tree and standalone model
+directory remain available locally under the release staging area for audit and
+future synchronization. Re-check live links and Hub file hashes after any
+additional publication change. Review `RELEASE_SCOPE.md`, `MODEL_CARD.md`,
+`NOTICE`, and `THIRD_PARTY_NOTICES.md` before distributing further updates.

@@ -121,7 +121,7 @@ as 13 tasks × 4 cases per context length (52 cases per length).
 
 ## Model loading verification
 
-The public snippets use the standalone Hub ID `yigu666/DenseK3-4B`,
+The public snippets use the standalone Hub ID `qinfu19/DenseK3`,
 `AutoTokenizer`, `AutoModelForCausalLM`, `trust_remote_code=True`, and
 `torch_dtype=torch.float16`. The cards identify custom code and
 `flash-linear-attention==0.5.2`; the GitHub quick start points to the pinned
@@ -145,8 +145,9 @@ the release contract.
 
 1. The final post-selection training-record and total-token counts remain
    `NOT VERIFIED FROM RELEASE ARTIFACTS`; this is disclosed rather than guessed.
-2. The public Hub/GitHub upload itself is an external publication step. After
-   upload, re-run the link and standalone-hash checks against the live repos.
+2. The maintainer has now published GitHub `yigu666/DenseK3` and Hugging Face
+   `qinfu19/DenseK3`; live link and Hub-hash checks should be re-run after these
+   URL edits, because this workspace does not re-fetch remote state.
 3. Native hardware and dependency availability remain environment-specific; the
    release does not promote the provisional reduced-scope recovery evidence to a
    native full retrain claim.

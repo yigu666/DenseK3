@@ -2,9 +2,9 @@
 
 **[English](README.md) | [中文](README_zh.md)**
 
-[![许可证：Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-green.svg)](LICENSE) [![模型：DenseK3-4B](https://img.shields.io/badge/Hugging%20Face-DenseK3--4B-yellow.svg)](https://huggingface.co/yigu666/DenseK3-4B)
+[![许可证：Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-green.svg)](LICENSE) [![模型：DenseK3-4B](https://img.shields.io/badge/Hugging%20Face-DenseK3--4B-yellow.svg)](https://huggingface.co/qinfu19/DenseK3)
 
-🤗 **模型发布：** [qinfu19/DenseK3-4B]((https://huggingface.co/qinfu19/DenseK3))
+🤗 **模型发布：** [qinfu19/DenseK3](https://huggingface.co/qinfu19/DenseK3)
 
 DenseK3 是一个独立研究项目，探索在保留 Qwen3.5-4B-Base 兼容性与初始化
 优势的同时，能否引入 Kimi K3 风格的循环/注意力思想。公开检查点名称为
@@ -188,7 +188,7 @@ DenseK3-4B 不声称长上下文质量优于 donor。
 不需要 donor checkpoint：
 
 ```bash
-hf download yigu666/DenseK3-4B \
+hf download qinfu19/DenseK3 \
   --local-dir models/DenseK3-4B \
   --repo-type model
 ```
@@ -200,7 +200,7 @@ hf download yigu666/DenseK3-4B \
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-model_id = "yigu666/DenseK3-4B"
+model_id = "qinfu19/DenseK3"
 tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(
     model_id,
@@ -257,7 +257,7 @@ DenseK3/
 ```
 
 standalone 模型单独发布为
-[`yigu666/DenseK3-4B`](https://huggingface.co/yigu666/DenseK3-4B)。另行准备的
+[`qinfu19/DenseK3`](https://huggingface.co/qinfu19/DenseK3)。另行准备的
 delta payload 是相对于复现 parent 的审计材料，不是第二个公开模型产品。本
 GitHub 源码树不提交 donor 权重、数据集、optimizer state、凭据、私有 cache 或
 非 canonical 检查点。
