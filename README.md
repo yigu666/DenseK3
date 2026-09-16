@@ -4,7 +4,7 @@
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-green.svg)](LICENSE) [![Model: DenseK3-4B](https://img.shields.io/badge/Hugging%20Face-DenseK3--4B-yellow.svg)](https://huggingface.co/yigu666/DenseK3-4B)
 
-🤗 **Model release:** [yigu666/DenseK3-4B](https://huggingface.co/yigu666/DenseK3-4B)
+🤗 **Model release:** [qinfu19/DenseK3-4B]((https://huggingface.co/qinfu19/DenseK3))
 
 DenseK3 is an independent research project exploring whether a dense language
 model can inherit Kimi K3-style recurrent/attention ideas while retaining the
