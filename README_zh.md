@@ -4,7 +4,7 @@
 
 [![许可证：Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-green.svg)](LICENSE) [![模型：DenseK3-4B](https://img.shields.io/badge/Hugging%20Face-DenseK3--4B-yellow.svg)](https://huggingface.co/yigu666/DenseK3-4B)
 
-🤗 **模型发布：** [yigu666/DenseK3-4B](https://huggingface.co/yigu666/DenseK3-4B)
+🤗 **模型发布：** [qinfu19/DenseK3-4B]((https://huggingface.co/qinfu19/DenseK3))
 
 DenseK3 是一个独立研究项目，探索在保留 Qwen3.5-4B-Base 兼容性与初始化
 优势的同时，能否引入 Kimi K3 风格的循环/注意力思想。公开检查点名称为
