@@ -1,0 +1,1112 @@
+{
+  "schema_version": 1,
+  "side": "standalone_clean_room",
+  "public_model_name": "DenseK3-4B",
+  "canonical_internal_stage": "P11.6",
+  "structural": {
+    "model_parameter_count": 4226764032,
+    "parameter_names_sha256": "d49b27d643e331a4ca057f95f2dcd47deab5e689a64dc0e0f1dfc0c7ded36c52",
+    "parameter_name_count": 692,
+    "model_dtype": "torch.float16",
+    "device": "cuda:0",
+    "config_class": "transformers_modules.DenseK3_hyphen_4B.ccf16063287ac944.configuration_densek3.DenseK3Config",
+    "model_class": "transformers_modules.DenseK3_hyphen_4B.be84ac7174d154bc.modeling_densek3.DenseK3ForCausalLM"
+  },
+  "prompts": [
+    {
+      "index": 0,
+      "cache": {
+        "present": true,
+        "type": "TitanP7HybridCache",
+        "latent_contract": {
+          "latent_cache_layers": [
+            3,
+            7,
+            11,
+            15,
+            19,
+            23,
+            27,
+            31
+          ],
+          "latent_layer_count": 8,
+          "latent_dims": {
+            "3": 512,
+            "7": 512,
+            "11": 512,
+            "15": 512,
+            "19": 512,
+            "23": 512,
+            "27": 512,
+            "31": 512
+          },
+          "latent_shapes": {
+            "3": [
+              1,
+              11,
+              512
+            ],
+            "7": [
+              1,
+              11,
+              512
+            ],
+            "11": [
+              1,
+              11,
+              512
+            ],
+            "15": [
+              1,
+              11,
+              512
+            ],
+            "19": [
+              1,
+              11,
+              512
+            ],
+            "23": [
+              1,
+              11,
+              512
+            ],
+            "27": [
+              1,
+              11,
+              512
+            ],
+            "31": [
+              1,
+              11,
+              512
+            ]
+          },
+          "latent_append_lengths": {
+            "3": [
+              9,
+              2
+            ],
+            "7": [
+              9,
+              2
+            ],
+            "11": [
+              9,
+              2
+            ],
+            "15": [
+              9,
+              2
+            ],
+            "19": [
+              9,
+              2
+            ],
+            "23": [
+              9,
+              2
+            ],
+            "27": [
+              9,
+              2
+            ],
+            "31": [
+              9,
+              2
+            ]
+          },
+          "latent_finite": {
+            "3": true,
+            "7": true,
+            "11": true,
+            "15": true,
+            "19": true,
+            "23": true,
+            "27": true,
+            "31": true
+          },
+          "seen_tokens": 11,
+          "bytes": {
+            "kda": 51511296,
+            "expanded_k": 0,
+            "expanded_v": 0,
+            "latent": 90112,
+            "persistent_expanded_k_numel": 0,
+            "persistent_expanded_v_numel": 0,
+            "total": 51601408
+          }
+        }
+      },
+      "continuation_cache": {
+        "present": true,
+        "type": "TitanP7HybridCache",
+        "latent_contract": {
+          "latent_cache_layers": [
+            3,
+            7,
+            11,
+            15,
+            19,
+            23,
+            27,
+            31
+          ],
+          "latent_layer_count": 8,
+          "latent_dims": {
+            "3": 512,
+            "7": 512,
+            "11": 512,
+            "15": 512,
+            "19": 512,
+            "23": 512,
+            "27": 512,
+            "31": 512
+          },
+          "latent_shapes": {
+            "3": [
+              1,
+              11,
+              512
+            ],
+            "7": [
+              1,
+              11,
+              512
+            ],
+            "11": [
+              1,
+              11,
+              512
+            ],
+            "15": [
+              1,
+              11,
+              512
+            ],
+            "19": [
+              1,
+              11,
+              512
+            ],
+            "23": [
+              1,
+              11,
+              512
+            ],
+            "27": [
+              1,
+              11,
+              512
+            ],
+            "31": [
+              1,
+              11,
+              512
+            ]
+          },
+          "latent_append_lengths": {
+            "3": [
+              9,
+              2
+            ],
+            "7": [
+              9,
+              2
+            ],
+            "11": [
+              9,
+              2
+            ],
+            "15": [
+              9,
+              2
+            ],
+            "19": [
+              9,
+              2
+            ],
+            "23": [
+              9,
+              2
+            ],
+            "27": [
+              9,
+              2
+            ],
+            "31": [
+              9,
+              2
+            ]
+          },
+          "latent_finite": {
+            "3": true,
+            "7": true,
+            "11": true,
+            "15": true,
+            "19": true,
+            "23": true,
+            "27": true,
+            "31": true
+          },
+          "seen_tokens": 11,
+          "bytes": {
+            "kda": 51511296,
+            "expanded_k": 0,
+            "expanded_v": 0,
+            "latent": 90112,
+            "persistent_expanded_k_numel": 0,
+            "persistent_expanded_v_numel": 0,
+            "total": 51601408
+          }
+        }
+      },
+      "generated_ids": [
+        35,
+        1081,
+        42,
+        18,
+        72346,
+        279,
+        2614,
+        55687,
+        25,
+        271,
+        13682,
+        59,
+        32515
+      ]
+    },
+    {
+      "index": 1,
+      "cache": {
+        "present": true,
+        "type": "TitanP7HybridCache",
+        "latent_contract": {
+          "latent_cache_layers": [
+            3,
+            7,
+            11,
+            15,
+            19,
+            23,
+            27,
+            31
+          ],
+          "latent_layer_count": 8,
+          "latent_dims": {
+            "3": 512,
+            "7": 512,
+            "11": 512,
+            "15": 512,
+            "19": 512,
+            "23": 512,
+            "27": 512,
+            "31": 512
+          },
+          "latent_shapes": {
+            "3": [
+              1,
+              19,
+              512
+            ],
+            "7": [
+              1,
+              19,
+              512
+            ],
+            "11": [
+              1,
+              19,
+              512
+            ],
+            "15": [
+              1,
+              19,
+              512
+            ],
+            "19": [
+              1,
+              19,
+              512
+            ],
+            "23": [
+              1,
+              19,
+              512
+            ],
+            "27": [
+              1,
+              19,
+              512
+            ],
+            "31": [
+              1,
+              19,
+              512
+            ]
+          },
+          "latent_append_lengths": {
+            "3": [
+              17,
+              2
+            ],
+            "7": [
+              17,
+              2
+            ],
+            "11": [
+              17,
+              2
+            ],
+            "15": [
+              17,
+              2
+            ],
+            "19": [
+              17,
+              2
+            ],
+            "23": [
+              17,
+              2
+            ],
+            "27": [
+              17,
+              2
+            ],
+            "31": [
+              17,
+              2
+            ]
+          },
+          "latent_finite": {
+            "3": true,
+            "7": true,
+            "11": true,
+            "15": true,
+            "19": true,
+            "23": true,
+            "27": true,
+            "31": true
+          },
+          "seen_tokens": 19,
+          "bytes": {
+            "kda": 51511296,
+            "expanded_k": 0,
+            "expanded_v": 0,
+            "latent": 155648,
+            "persistent_expanded_k_numel": 0,
+            "persistent_expanded_v_numel": 0,
+            "total": 51666944
+          }
+        }
+      },
+      "continuation_cache": {
+        "present": true,
+        "type": "TitanP7HybridCache",
+        "latent_contract": {
+          "latent_cache_layers": [
+            3,
+            7,
+            11,
+            15,
+            19,
+            23,
+            27,
+            31
+          ],
+          "latent_layer_count": 8,
+          "latent_dims": {
+            "3": 512,
+            "7": 512,
+            "11": 512,
+            "15": 512,
+            "19": 512,
+            "23": 512,
+            "27": 512,
+            "31": 512
+          },
+          "latent_shapes": {
+            "3": [
+              1,
+              19,
+              512
+            ],
+            "7": [
+              1,
+              19,
+              512
+            ],
+            "11": [
+              1,
+              19,
+              512
+            ],
+            "15": [
+              1,
+              19,
+              512
+            ],
+            "19": [
+              1,
+              19,
+              512
+            ],
+            "23": [
+              1,
+              19,
+              512
+            ],
+            "27": [
+              1,
+              19,
+              512
+            ],
+            "31": [
+              1,
+              19,
+              512
+            ]
+          },
+          "latent_append_lengths": {
+            "3": [
+              17,
+              2
+            ],
+            "7": [
+              17,
+              2
+            ],
+            "11": [
+              17,
+              2
+            ],
+            "15": [
+              17,
+              2
+            ],
+            "19": [
+              17,
+              2
+            ],
+            "23": [
+              17,
+              2
+            ],
+            "27": [
+              17,
+              2
+            ],
+            "31": [
+              17,
+              2
+            ]
+          },
+          "latent_finite": {
+            "3": true,
+            "7": true,
+            "11": true,
+            "15": true,
+            "19": true,
+            "23": true,
+            "27": true,
+            "31": true
+          },
+          "seen_tokens": 19,
+          "bytes": {
+            "kda": 51511296,
+            "expanded_k": 0,
+            "expanded_v": 0,
+            "latent": 155648,
+            "persistent_expanded_k_numel": 0,
+            "persistent_expanded_v_numel": 0,
+            "total": 51666944
+          }
+        }
+      },
+      "generated_ids": [
+        96220,
+        98682,
+        98832,
+        98294,
+        2233,
+        1679,
+        76512,
+        220,
+        96050,
+        96227,
+        111021,
+        95909,
+        97107,
+        95744,
+        95909,
+        40290,
+        1710,
+        271,
+        248068,
+        198,
+        96091
+      ]
+    },
+    {
+      "index": 2,
+      "cache": {
+        "present": true,
+        "type": "TitanP7HybridCache",
+        "latent_contract": {
+          "latent_cache_layers": [
+            3,
+            7,
+            11,
+            15,
+            19,
+            23,
+            27,
+            31
+          ],
+          "latent_layer_count": 8,
+          "latent_dims": {
+            "3": 512,
+            "7": 512,
+            "11": 512,
+            "15": 512,
+            "19": 512,
+            "23": 512,
+            "27": 512,
+            "31": 512
+          },
+          "latent_shapes": {
+            "3": [
+              1,
+              17,
+              512
+            ],
+            "7": [
+              1,
+              17,
+              512
+            ],
+            "11": [
+              1,
+              17,
+              512
+            ],
+            "15": [
+              1,
+              17,
+              512
+            ],
+            "19": [
+              1,
+              17,
+              512
+            ],
+            "23": [
+              1,
+              17,
+              512
+            ],
+            "27": [
+              1,
+              17,
+              512
+            ],
+            "31": [
+              1,
+              17,
+              512
+            ]
+          },
+          "latent_append_lengths": {
+            "3": [
+              15,
+              2
+            ],
+            "7": [
+              15,
+              2
+            ],
+            "11": [
+              15,
+              2
+            ],
+            "15": [
+              15,
+              2
+            ],
+            "19": [
+              15,
+              2
+            ],
+            "23": [
+              15,
+              2
+            ],
+            "27": [
+              15,
+              2
+            ],
+            "31": [
+              15,
+              2
+            ]
+          },
+          "latent_finite": {
+            "3": true,
+            "7": true,
+            "11": true,
+            "15": true,
+            "19": true,
+            "23": true,
+            "27": true,
+            "31": true
+          },
+          "seen_tokens": 17,
+          "bytes": {
+            "kda": 51511296,
+            "expanded_k": 0,
+            "expanded_v": 0,
+            "latent": 139264,
+            "persistent_expanded_k_numel": 0,
+            "persistent_expanded_v_numel": 0,
+            "total": 51650560
+          }
+        }
+      },
+      "continuation_cache": {
+        "present": true,
+        "type": "TitanP7HybridCache",
+        "latent_contract": {
+          "latent_cache_layers": [
+            3,
+            7,
+            11,
+            15,
+            19,
+            23,
+            27,
+            31
+          ],
+          "latent_layer_count": 8,
+          "latent_dims": {
+            "3": 512,
+            "7": 512,
+            "11": 512,
+            "15": 512,
+            "19": 512,
+            "23": 512,
+            "27": 512,
+            "31": 512
+          },
+          "latent_shapes": {
+            "3": [
+              1,
+              17,
+              512
+            ],
+            "7": [
+              1,
+              17,
+              512
+            ],
+            "11": [
+              1,
+              17,
+              512
+            ],
+            "15": [
+              1,
+              17,
+              512
+            ],
+            "19": [
+              1,
+              17,
+              512
+            ],
+            "23": [
+              1,
+              17,
+              512
+            ],
+            "27": [
+              1,
+              17,
+              512
+            ],
+            "31": [
+              1,
+              17,
+              512
+            ]
+          },
+          "latent_append_lengths": {
+            "3": [
+              15,
+              2
+            ],
+            "7": [
+              15,
+              2
+            ],
+            "11": [
+              15,
+              2
+            ],
+            "15": [
+              15,
+              2
+            ],
+            "19": [
+              15,
+              2
+            ],
+            "23": [
+              15,
+              2
+            ],
+            "27": [
+              15,
+              2
+            ],
+            "31": [
+              15,
+              2
+            ]
+          },
+          "latent_finite": {
+            "3": true,
+            "7": true,
+            "11": true,
+            "15": true,
+            "19": true,
+            "23": true,
+            "27": true,
+            "31": true
+          },
+          "seen_tokens": 17,
+          "bytes": {
+            "kda": 51511296,
+            "expanded_k": 0,
+            "expanded_v": 0,
+            "latent": 139264,
+            "persistent_expanded_k_numel": 0,
+            "persistent_expanded_v_numel": 0,
+            "total": 51650560
+          }
+        }
+      },
+      "generated_ids": [
+        727,
+        43088,
+        7392,
+        11,
+        6297,
+        1590,
+        198,
+        262,
+        460,
+        1558,
+        25667,
+        30883,
+        28,
+        9082,
+        8,
+        1358,
+        727,
+        43088,
+        62
+      ]
+    },
+    {
+      "index": 3,
+      "cache": {
+        "present": true,
+        "type": "TitanP7HybridCache",
+        "latent_contract": {
+          "latent_cache_layers": [
+            3,
+            7,
+            11,
+            15,
+            19,
+            23,
+            27,
+            31
+          ],
+          "latent_layer_count": 8,
+          "latent_dims": {
+            "3": 512,
+            "7": 512,
+            "11": 512,
+            "15": 512,
+            "19": 512,
+            "23": 512,
+            "27": 512,
+            "31": 512
+          },
+          "latent_shapes": {
+            "3": [
+              1,
+              12,
+              512
+            ],
+            "7": [
+              1,
+              12,
+              512
+            ],
+            "11": [
+              1,
+              12,
+              512
+            ],
+            "15": [
+              1,
+              12,
+              512
+            ],
+            "19": [
+              1,
+              12,
+              512
+            ],
+            "23": [
+              1,
+              12,
+              512
+            ],
+            "27": [
+              1,
+              12,
+              512
+            ],
+            "31": [
+              1,
+              12,
+              512
+            ]
+          },
+          "latent_append_lengths": {
+            "3": [
+              10,
+              2
+            ],
+            "7": [
+              10,
+              2
+            ],
+            "11": [
+              10,
+              2
+            ],
+            "15": [
+              10,
+              2
+            ],
+            "19": [
+              10,
+              2
+            ],
+            "23": [
+              10,
+              2
+            ],
+            "27": [
+              10,
+              2
+            ],
+            "31": [
+              10,
+              2
+            ]
+          },
+          "latent_finite": {
+            "3": true,
+            "7": true,
+            "11": true,
+            "15": true,
+            "19": true,
+            "23": true,
+            "27": true,
+            "31": true
+          },
+          "seen_tokens": 12,
+          "bytes": {
+            "kda": 51511296,
+            "expanded_k": 0,
+            "expanded_v": 0,
+            "latent": 98304,
+            "persistent_expanded_k_numel": 0,
+            "persistent_expanded_v_numel": 0,
+            "total": 51609600
+          }
+        }
+      },
+      "continuation_cache": {
+        "present": true,
+        "type": "TitanP7HybridCache",
+        "latent_contract": {
+          "latent_cache_layers": [
+            3,
+            7,
+            11,
+            15,
+            19,
+            23,
+            27,
+            31
+          ],
+          "latent_layer_count": 8,
+          "latent_dims": {
+            "3": 512,
+            "7": 512,
+            "11": 512,
+            "15": 512,
+            "19": 512,
+            "23": 512,
+            "27": 512,
+            "31": 512
+          },
+          "latent_shapes": {
+            "3": [
+              1,
+              12,
+              512
+            ],
+            "7": [
+              1,
+              12,
+              512
+            ],
+            "11": [
+              1,
+              12,
+              512
+            ],
+            "15": [
+              1,
+              12,
+              512
+            ],
+            "19": [
+              1,
+              12,
+              512
+            ],
+            "23": [
+              1,
+              12,
+              512
+            ],
+            "27": [
+              1,
+              12,
+              512
+            ],
+            "31": [
+              1,
+              12,
+              512
+            ]
+          },
+          "latent_append_lengths": {
+            "3": [
+              10,
+              2
+            ],
+            "7": [
+              10,
+              2
+            ],
+            "11": [
+              10,
+              2
+            ],
+            "15": [
+              10,
+              2
+            ],
+            "19": [
+              10,
+              2
+            ],
+            "23": [
+              10,
+              2
+            ],
+            "27": [
+              10,
+              2
+            ],
+            "31": [
+              10,
+              2
+            ]
+          },
+          "latent_finite": {
+            "3": true,
+            "7": true,
+            "11": true,
+            "15": true,
+            "19": true,
+            "23": true,
+            "27": true,
+            "31": true
+          },
+          "seen_tokens": 12,
+          "bytes": {
+            "kda": 51511296,
+            "expanded_k": 0,
+            "expanded_v": 0,
+            "latent": 98304,
+            "persistent_expanded_k_numel": 0,
+            "persistent_expanded_v_numel": 0,
+            "total": 51609600
+          }
+        }
+      },
+      "generated_ids": [
+        32,
+        2716,
+        9238,
+        42117,
+        9640,
+        11988,
+        69892,
+        19954,
+        45543,
+        13,
+        198,
+        52782,
+        25,
+        198
+      ]
+    }
+  ],
+  "logits_file": "standalone_logits.safetensors",
+  "roundtrip": {
+    "status": "PASS",
+    "generated_ids": [
+      35,
+      1081,
+      42,
+      18,
+      72346,
+      279,
+      2614,
+      55687,
+      25,
+      271,
+      13682,
+      59,
+      32515
+    ],
+    "weight_files": [
+      "model-00001-of-00003.safetensors",
+      "model-00002-of-00003.safetensors",
+      "model-00003-of-00003.safetensors"
+    ]
+  }
+}
