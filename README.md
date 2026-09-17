@@ -27,7 +27,7 @@
 
 最终公开模型为 **DenseK3-4B**，这是一个拥有 4.23B 参数的纯文本 base language model。
 
-DenseK3 是独立研究项目。它**不是 Moonshot AI / Kimi 的官方发布**，也不声称复现完整的 Kimi K3 系统。
+DenseK3 是独立研究项目。它**不是 Moonshot AI / Kimi 的官方发布**
 
 ---
 
@@ -63,9 +63,9 @@ DenseK3 研究一个不同的问题：
 
 因此，本项目将模型架构与预训练知识视为部分可分离的对象。
 
-DenseK3 不从头复现 Kimi K3，而是从 Qwen3.5-4B-Base 出发，逐步替换其 token mixing、depth mixing、FFN activation 和长上下文状态表示。
+DenseK3从 Qwen3.5-4B-Base 出发，逐步替换其 token mixing、depth mixing、FFN activation 和长上下文状态表示。
 
-目标不是声称 DenseK3 在所有方面都优于 Qwen，而是研究三个具体问题：
+研究三个具体问题：
 
 1. 大规模架构迁移后，多少预训练能力能够保留？
 2. 为保持转换后模型可用，需要哪些迁移技术？
@@ -235,7 +235,7 @@ linear_beta        = 25
 
 Qwen SwiGLU 路径迁移为 **Dense SiTU-GLU**，用于约束 GLU 乘积周围的 activation outlier。
 
-这是该模型被称为 **Dense K3-style model**、而不是完整 Kimi K3 复现的重要原因。
+因此这是该模型被称为 **Dense K3-style model**、不是完整 Kimi K3 复现的重要原因。
 
 ---
 
@@ -376,10 +376,6 @@ DenseK3 在 tokenized context length 不超过 131,072 tokens 的样本上，使
 |     64K |      **84.36%** |     53.97% |
 |    128K |      **78.37%** |     49.87% |
 
-这不是完整的官方 RULER leaderboard 配置。
-
-DenseK3-4B **不声称**在通用能力或长上下文质量上优于 Qwen donor。
-
 ---
 
 ## 💾 Memory Efficiency
@@ -503,9 +499,7 @@ outputs = model.generate(
 print(tokenizer.decode(outputs[0], skip_special_tokens=True))
 ```
 
-DenseK3-4B 是 **base causal language model**，不是 instruction-tuned chat model。
-
-已验证的发布路径是 **Hugging Face Transformers + 随模型提供的自定义 model code**。除非另有明确文档，vLLM、SGLang、Docker Model Runner 及其他服务后端不在当前验证声明范围内。
+DenseK3-4B 是 **base causal language model**
 
 由于模型使用自定义 Hub 代码，启用 `trust_remote_code=True` 前请审阅随附实现。需要不可变代码 provenance 时，请固定具体的 Hugging Face revision。
 
@@ -599,8 +593,7 @@ GitHub 源码树不提交 donor 权重、数据集、optimizer state、凭据、
 
 * **DenseK3-4B** 是规范公开模型。`P11.6` 等内部阶段标识仅用于研究 provenance。
 * DenseK3-4B 是**纯文本 base causal language model**，不是 instruction-tuned conversational assistant。
-* 在报告的聚合能力与长上下文 benchmark 上，DenseK3-4B 低于 Qwen3.5-4B-Base。
-* 本项目不声称相对于 Qwen 具有吞吐量优势。
+* 在报告的聚合能力与长上下文 benchmark 上，DenseK3-4B 略低于 Qwen3.5-4B-Base。
 * 512K 结果是 runtime 可行性证据；标准化任务质量证据截至 128K。
 * 推导的 75% 内存降低仅适用于随序列增长的持久化 attention-state payload，不代表总 VRAM 降低。
 * 模型使用自定义 Transformers 代码，并需要 FLA runtime 依赖。
