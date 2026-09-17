@@ -1,75 +1,75 @@
 # DenseK3
 
-**[English](README.md) | [中文](README_zh.md)**
+**[English](README_en.md) | [中文](README.md)**
 
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-green.svg)](LICENSE)
-[![Model: DenseK3-4B](https://img.shields.io/badge/Hugging%20Face-DenseK3--4B-yellow.svg)](https://huggingface.co/qinfu19/DenseK3-4B)
+[![许可证：Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-green.svg)](LICENSE)
+[![模型：DenseK3-4B](https://img.shields.io/badge/Hugging%20Face-DenseK3--4B-yellow.svg)](https://huggingface.co/qinfu19/DenseK3-4B)
 
-🤗 **Model:** [qinfu19/DenseK3-4B](https://huggingface.co/qinfu19/DenseK3-4B)
+🤗 **模型：** [qinfu19/DenseK3-4B](https://huggingface.co/qinfu19/DenseK3-4B)
 
-**DenseK3 explores whether pretrained knowledge can survive a large white-box architecture migration.**
+**DenseK3 探索预训练知识能否在大规模白盒架构迁移后继续保留。**
 
-Starting from **Qwen3.5-4B-Base**, we migrate its
+我们从 **Qwen3.5-4B-Base** 出发，将其
 
 ```text
 24 × Gated DeltaNet
  8 × Gated Attention
 ```
 
-hybrid backbone into
+混合骨干迁移为
 
 ```text
 24 × Kimi Delta Attention (KDA)
  8 × strict-NoPE Multi-head Latent Attention (MLA)
 ```
 
-and further introduce **True Latent Cache, Block AttnRes, and Dense SiTU-GLU**.
+并进一步引入 **True Latent Cache、Block AttnRes 和 Dense SiTU-GLU**。
 
-The resulting public model is **DenseK3-4B**, a 4.23B-parameter text-only base language model.
+最终公开模型为 **DenseK3-4B**，这是一个拥有 4.23B 参数的纯文本 base language model。
 
-DenseK3 is an independent research project. It is **not an official Moonshot AI / Kimi release**, and it does not claim to reproduce the complete Kimi K3 system.
+DenseK3 是独立研究项目。它**不是 Moonshot AI / Kimi 的官方发布**，也不声称复现完整的 Kimi K3 系统。
 
 ---
 
 ## ✨ Highlights
 
-* **Qwen3.5 → Dense K3 white-box migration**
-  Migrates the donor's `24 Gated DeltaNet + 8 Gated Attention` backbone into **24 KDA + 8 strict-NoPE MLA**, while retaining the Qwen tokenizer, vocabulary, embedding/LM-head semantics, hidden size, and FFN width.
+* **Qwen3.5 → Dense K3 白盒迁移**
+  将 donor 的 `24 Gated DeltaNet + 8 Gated Attention` 骨干迁移为 **24 KDA + 8 strict-NoPE MLA**，同时保留 Qwen tokenizer、词表、embedding/LM-head 语义、hidden size 和 FFN 宽度。
 
-* **Stage-wise auditable migration**
-  KDA, MLA, True Latent Cache, Block AttnRes, Dense SiTU-GLU, joint recovery, and capability distillation are introduced and validated stage by stage rather than collapsed into one opaque retraining run.
+* **按阶段可审计的迁移**
+  KDA、MLA、True Latent Cache、Block AttnRes、Dense SiTU-GLU、联合恢复和能力蒸馏均按阶段引入并验证，而不是合并为一次不透明的重新训练。
 
-* **92.6% MMLU accuracy retention**
-  DenseK3-4B reaches **67.67%** on MMLU 5-shot versus **73.10%** for Qwen3.5-4B-Base.
+* **保留 92.6% 的 MMLU 准确率**
+  DenseK3-4B 在 MMLU 5-shot 上达到 **67.67%**，Qwen3.5-4B-Base 为 **73.10%**。
 
 * **True Latent Cache**
-  Each MLA layer persistently stores only a `[B, T, 512]` latent history. Expanded K/V tensors are temporary and are not persisted.
+  每个 MLA 层只持久化 `[B, T, 512]` latent history。展开后的 K/V 仅临时生成，不会持久化。
 
-* **75% lower sequence-growing attention-state payload**
-  Donor-equivalent GQA state scales at approximately **32 KiB/token**, versus **8 KiB/token** for the eight DenseK3 MLA latent histories.
+* **随序列增长的注意力状态负载降低 75%**
+  donor 等价的 GQA 状态约为 **32 KiB/token**，而 DenseK3 的 8 个 MLA latent history 约为 **8 KiB/token**。
 
-* **Standalone Hugging Face release**
-  DenseK3-4B is exported as a self-contained custom Transformers model and passed clean-room structural, logit, cache, deterministic-generation, and save/load parity validation.
+* **独立 Hugging Face 发布**
+  DenseK3-4B 被导出为自包含的自定义 Transformers 模型，并通过了 clean-room 结构、logit、cache、确定性生成以及保存/加载 parity 验证。
 
 ---
 
 ## 💡 Why DenseK3?
 
-Modern pretrained language models contain substantial knowledge acquired through expensive large-scale pretraining. New model architectures, however, are often introduced through training from scratch.
+现代预训练语言模型通过昂贵的大规模预训练获得了大量知识。然而，新架构通常需要从头训练。
 
-DenseK3 studies a different question:
+DenseK3 研究一个不同的问题：
 
-> **Can an already pretrained model be migrated into a substantially different architecture while preserving a meaningful fraction of its learned capability?**
+> **一个已经预训练的模型，能否迁移到显著不同的架构，同时保留其已学习能力中有意义的一部分？**
 
-The project therefore treats model architecture and pretrained knowledge as partially separable objects.
+因此，本项目将模型架构与预训练知识视为部分可分离的对象。
 
-Instead of reproducing Kimi K3 from scratch, DenseK3 starts from Qwen3.5-4B-Base and progressively replaces its token-mixing, depth-mixing, FFN activation, and long-context state representation.
+DenseK3 不从头复现 Kimi K3，而是从 Qwen3.5-4B-Base 出发，逐步替换其 token mixing、depth mixing、FFN activation 和长上下文状态表示。
 
-The goal is not to claim that DenseK3 is universally better than Qwen. The project investigates three concrete questions:
+目标不是声称 DenseK3 在所有方面都优于 Qwen，而是研究三个具体问题：
 
-1. How much pretrained capability survives a large architecture migration?
-2. Which migration techniques are required to keep the converted model functional?
-3. What memory characteristics emerge from the resulting KDA/MLA hybrid?
+1. 大规模架构迁移后，多少预训练能力能够保留？
+2. 为保持转换后模型可用，需要哪些迁移技术？
+3. 得到的 KDA/MLA 混合架构会呈现怎样的内存特征？
 
 ---
 
@@ -77,28 +77,28 @@ The goal is not to claim that DenseK3 is universally better than Qwen. The proje
 
 ### Overview
 
-| Component                |                       Qwen3.5-4B-Base |                     DenseK3-4B |
+| 组件                     |                       Qwen3.5-4B-Base |                     DenseK3-4B |
 | ------------------------ | ------------------------------------: | -----------------------------: |
-| Decoder layers           |                                    32 |                             32 |
+| Decoder 层数             |                                    32 |                             32 |
 | Hidden size              |                                 2,560 |                          2,560 |
 | FFN intermediate size    |                                 9,216 |                          9,216 |
 | Vocabulary               |                               248,320 |                        248,320 |
 | Token mixers             | 24 Gated DeltaNet + 8 Gated Attention | **24 KDA + 8 strict-NoPE MLA** |
 | Mixer pattern            |                                   3:1 |     `(KDA, KDA, KDA, MLA) × 8` |
-| MLA layers (0-based)     |                                     — | `3, 7, 11, 15, 19, 23, 27, 31` |
+| MLA layers（从 0 开始）  |                                     — | `3, 7, 11, 15, 19, 23, 27, 31` |
 | Channel mixer            |                                SwiGLU |             **Dense SiTU-GLU** |
 | Depth mixing             |                Standard residual path |              **Block AttnRes** |
 | Attention sequence state |                      Expanded GQA K/V |         **512-d latent cache** |
 | Embedding / LM head      |                Qwen pretrained / tied |           **Preserved / tied** |
 
-The 32-layer backbone follows a fixed 3:1 pattern:
+32 层骨干遵循固定的 3:1 模式：
 
 ```text
 KDA → KDA → KDA → MLA
           × 8
 ```
 
-Conceptually, DenseK3 combines four architectural axes:
+从概念上看，DenseK3 结合了四个架构维度：
 
 ```text
 Token Mixing
@@ -115,15 +115,15 @@ Long-Context State
     + MLA True Latent Cache
 ```
 
-Detailed equations, tensor shapes, normalization rules, and parameter mappings are documented in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+详细公式、张量形状、归一化规则和参数映射见 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)。
 
 ---
 
 ### Kimi Delta Attention (KDA)
 
-DenseK3 replaces the donor's 24 recurrent Gated DeltaNet mixers with Kimi Delta Attention.
+DenseK3 将 donor 的 24 个循环 Gated DeltaNet mixer 替换为 Kimi Delta Attention。
 
-The released KDA configuration uses:
+发布的 KDA 配置为：
 
 ```text
 Q heads       = 16
@@ -138,21 +138,21 @@ recurrent state:
 [B, 32, 128, 128]
 ```
 
-The canonical implementation uses **K3-style lower-bounded decay** and a **SiLU output gate**, while preserving the numerical semantics required by the migrated model.
+规范实现采用 **K3 风格的下界约束 decay** 和 **SiLU output gate**，同时保持迁移模型所需的数值语义。
 
-KDA provides the primary recurrent sequence-modeling path without accumulating a token-wise K/V cache for the 24 KDA layers.
+KDA 提供主要的循环序列建模路径，24 个 KDA 层不会累积逐 token 的 K/V cache。
 
 ---
 
 ### strict-NoPE MLA
 
-DenseK3 inserts one MLA layer after every three KDA layers:
+DenseK3 每三个 KDA 层后插入一个 MLA 层：
 
 ```text
 3, 7, 11, 15, 19, 23, 27, 31
 ```
 
-The released MLA configuration uses:
+发布的 MLA 配置为：
 
 ```text
 attention heads      = 16
@@ -162,21 +162,21 @@ value head dim       = 256
 RoPE component       = disabled
 ```
 
-The MLA path is **strict-NoPE**: no RoPE component is used inside MLA attention.
+MLA 路径是 **strict-NoPE**：MLA attention 内不使用 RoPE 分量。
 
-The migration is not treated as a weight-space low-rank approximation alone. DenseK3 preserves donor Q/K normalization semantics and uses function-aware calibration to reduce the functional disruption caused by the attention conversion.
+该迁移不只是权重空间中的低秩近似。DenseK3 保留 donor 的 Q/K 归一化语义，并使用 function-aware calibration，降低 attention 转换造成的功能扰动。
 
 ---
 
 ### True Latent Cache
 
-For each of the eight MLA layers, the persistent sequence state is:
+对于 8 个 MLA 层中的每一个，持久化序列状态为：
 
 ```text
 [B, T, 512]
 ```
 
-with:
+其中：
 
 ```text
 persistent latent      = yes
@@ -184,30 +184,30 @@ persistent expanded K  = no
 persistent expanded V  = no
 ```
 
-Expanded K/V tensors are reconstructed only when needed for the current attention computation.
+展开后的 K/V 仅在当前 attention 计算需要时重建。
 
-KDA recurrent states and AttnRes depth sources are separate from this MLA sequence cache.
+KDA 循环状态与 AttnRes depth sources 独立于该 MLA 序列 cache。
 
 ---
 
 ### Block AttnRes
 
-The 32 decoder layers are organized into eight four-layer depth blocks.
+32 个 decoder 层被组织为 8 个四层 depth block。
 
-Each decoder layer contains two content-dependent routing sites:
+每个 decoder 层包含两个内容依赖的路由站点：
 
 ```text
 pre-token-mixer
 pre-FFN
 ```
 
-followed by one output routing site:
+随后是一个 output routing site：
 
 ```text
 32 × 2 + 1 = 65 AttnRes sites
 ```
 
-DenseK3 therefore combines:
+因此 DenseK3 结合了：
 
 ```text
 Token mixing:
@@ -221,9 +221,9 @@ Block AttnRes
 
 ### Dense SiTU-GLU
 
-DenseK3 intentionally keeps a dense FFN rather than adopting the full Kimi K3 LatentMoE system.
+DenseK3 有意保留 dense FFN，而不是采用完整 Kimi K3 LatentMoE 系统。
 
-The released FFN uses:
+发布的 FFN 使用：
 
 ```text
 hidden size        = 2560
@@ -233,17 +233,17 @@ beta               = 4
 linear_beta        = 25
 ```
 
-The Qwen SwiGLU path is migrated to **Dense SiTU-GLU**, which constrains activation outliers around the GLU product.
+Qwen SwiGLU 路径迁移为 **Dense SiTU-GLU**，用于约束 GLU 乘积周围的 activation outlier。
 
-This is a major reason the model is described as a **Dense K3-style model**, rather than a full Kimi K3 reproduction.
+这是该模型被称为 **Dense K3-style model**、而不是完整 Kimi K3 复现的重要原因。
 
 ---
 
 ### Preserved Qwen Components
 
-DenseK3 does not reinitialize the complete donor network.
+DenseK3 不会重新初始化整个 donor 网络。
 
-The migration preserves the Qwen donor's:
+迁移保留 Qwen donor 的：
 
 ```text
 Tokenizer
@@ -256,7 +256,7 @@ RMSNorm parameterization
 Contracted Q/K normalization semantics
 ```
 
-while changing the primary:
+同时改变主要的：
 
 ```text
 Token mixing
@@ -265,13 +265,13 @@ FFN activation structure
 Long-context state representation
 ```
 
-The tensor-level donor → DenseK3 mapping is documented in [`docs/MIGRATION.md`](docs/MIGRATION.md).
+张量级 donor → DenseK3 映射见 [`docs/MIGRATION.md`](docs/MIGRATION.md)。
 
 ---
 
 ## 🔄 From Qwen3.5 to DenseK3
 
-DenseK3 uses a staged migration strategy so that major architectural changes can be independently validated.
+DenseK3 使用分阶段迁移策略，使主要架构变化能够独立验证。
 
 ```text
 Qwen3.5-4B-Base
@@ -310,14 +310,14 @@ Capability Distillation
 DenseK3-4B
 ```
 
-The final recovery path includes:
+最终恢复路径包括：
 
-* **Qwen exact-token online policy distillation (OPD)** using the shared tokenizer space;
-* **Kimi text-space corrective distillation** for additional corrective teacher supervision.
+* **Qwen exact-token online policy distillation (OPD)**：使用共享 tokenizer 空间；
+* **Kimi text-space corrective distillation**：获得额外的纠偏 teacher supervision。
 
-The internal P0–P11 stage identifiers remain available for provenance and exact reproduction, but they are not required to understand or use the public model.
+内部 P0–P11 阶段标识仍用于 provenance 与精确复现，但理解和使用公开模型并不需要这些标识。
 
-See:
+参见：
 
 * [`docs/MIGRATION.md`](docs/MIGRATION.md)
 * [`docs/TRAINING.md`](docs/TRAINING.md)
@@ -327,23 +327,21 @@ See:
 
 ## 📊 Evaluation
 
-The results below use the frozen datasets, case IDs, prompts, and scoring contracts documented in [`docs/RESULTS.md`](docs/RESULTS.md).
+以下结果使用 [`docs/RESULTS.md`](docs/RESULTS.md) 中记录的冻结数据集、case ID、prompt 和评分契约。
 
 ### General Capability
 
 | Benchmark                   |            Qwen3.5-4B-Base |            DenseK3-4B |
 | --------------------------- | -------------------------: | --------------------: |
-| MMLU 5-shot, 57 subjects    | **73.10%** (10,265/14,042) | 67.67% (9,502/14,042) |
+| MMLU 5-shot，57 个 subject  | **73.10%** (10,265/14,042) | 67.67% (9,502/14,042) |
 | WikiText-103 raw-test CE ↓  |                 **1.9334** |                2.0821 |
 | WikiText-103 raw-test PPL ↓ |                 **6.9130** |                8.0211 |
 
-DenseK3-4B retains approximately:
+架构迁移后，DenseK3-4B 保留 donor MMLU 5-shot 准确率的约：
 
 ```text
 67.67 / 73.10 ≈ 92.6%
 ```
-
-of the donor's MMLU 5-shot accuracy after the architecture migration.
 
 ---
 
@@ -351,9 +349,9 @@ of the donor's MMLU 5-shot accuracy after the architecture migration.
 
 #### LongBench-v2
 
-DenseK3 uses a controlled **MC-LL Accuracy** metric over examples whose tokenized context length is no greater than 131,072 tokens.
+DenseK3 在 tokenized context length 不超过 131,072 tokens 的样本上，使用受控的 **MC-LL Accuracy** 指标。
 
-This is a comparative conditional-likelihood metric and **not the official LongBench-v2 generation leaderboard metric**.
+这是一个比较性的 conditional-likelihood 指标，**不是官方 LongBench-v2 generation leaderboard 指标**。
 
 | Model           |       MC-LL Accuracy |
 | --------------- | -------------------: |
@@ -362,7 +360,7 @@ This is a comparative conditional-likelihood metric and **not the official LongB
 
 #### Reduced RULER
 
-The released RULER evaluation is a fixed reduced suite:
+发布的 RULER 评测是固定的 reduced suite：
 
 ```text
 13 tasks × 4 cases/task
@@ -378,15 +376,15 @@ The released RULER evaluation is a fixed reduced suite:
 |     64K |      **84.36%** |     53.97% |
 |    128K |      **78.37%** |     49.87% |
 
-This is not the full official RULER leaderboard configuration.
+这不是完整的官方 RULER leaderboard 配置。
 
-DenseK3-4B does **not** claim general-capability or long-context-quality superiority over its Qwen donor.
+DenseK3-4B **不声称**在通用能力或长上下文质量上优于 Qwen donor。
 
 ---
 
 ## 💾 Memory Efficiency
 
-For eight attention layers under a two-byte cache representation:
+在 two-byte cache representation 下，8 个 attention 层的记账如下：
 
 ```text
 Qwen-equivalent GQA
@@ -400,7 +398,7 @@ Qwen-equivalent GQA
 = 32 KiB/token
 ```
 
-DenseK3 MLA:
+DenseK3 MLA：
 
 ```text
 8 layers
@@ -410,15 +408,15 @@ DenseK3 MLA:
 = 8 KiB/token
 ```
 
-This is a derived:
+推导得到：
 
 ```text
 75% reduction
 ```
 
-in **sequence-growing persistent attention-state payload**.
+即 **随序列增长的持久化 attention-state payload** 降低 75%。
 
-It is not a claim about total VRAM or end-to-end throughput.
+这不表示总 VRAM 或端到端吞吐量的提升。
 
 | Context | Qwen-equivalent GQA | DenseK3 latent state |
 | ------: | ------------------: | -------------------: |
@@ -430,41 +428,41 @@ It is not a claim about total VRAM or end-to-end throughput.
 
 ## 🚀 Long-Context Runtime
 
-A separate exact-semantics runtime probe on the pre-distillation DenseK3 parent architecture processed a complete **524,288-token** context and continued autoregressive decoding.
+一次独立的 exact-semantics runtime probe 在预蒸馏 DenseK3 parent architecture 上处理了完整的 **524,288-token** 上下文，并继续进行自回归解码。
 
-| Measurement                     |                         Recorded value |
-| ------------------------------- | -------------------------------------: |
-| Full prefill                    |                                   PASS |
-| Continued autoregressive decode |                                   PASS |
+| 测量                            |                         记录值 |
+| ------------------------------- | ----------------------------: |
+| Full prefill                    |                         PASS |
+| Continued autoregressive decode |                         PASS |
 | Peak allocated GPU memory       | `15,762,103,296` bytes ≈ **14.68 GiB** |
-| Peak reserved GPU memory        |                 `15,994,978,304` bytes |
-| Persistent latent state         |      `4,294,967,296` bytes = **4 GiB** |
-| Persistent expanded K           |                                      0 |
-| Persistent expanded V           |                                      0 |
+| Peak reserved GPU memory        |             `15,994,978,304` bytes |
+| Persistent latent state         |  `4,294,967,296` bytes = **4 GiB** |
+| Persistent expanded K           |                            0 |
+| Persistent expanded V           |                            0 |
 
-The probe used True Latent Cache with no sliding window and no approximate attention.
+该 probe 使用 True Latent Cache，无 sliding window，也没有 approximate attention。
 
-This validates:
+它验证了：
 
-> **512K runtime feasibility and cache semantics**
+> **512K runtime 可行性与 cache 语义**
 
-It does **not** establish:
+但没有证明：
 
-> **512K effective-context retrieval or reasoning quality**
+> **512K 有效上下文检索或推理质量**
 
-Standard public task-quality evaluation in this release stops at **128K**.
+本次发布的标准任务质量评测截至 **128K**。
 
-See [`docs/LONG_CONTEXT.md`](docs/LONG_CONTEXT.md).
+详见 [`docs/LONG_CONTEXT.md`](docs/LONG_CONTEXT.md)。
 
 ---
 
 ## ⚡ Quick Start
 
-### Use DenseK3-4B
+### 使用 DenseK3-4B
 
-DenseK3-4B is released as a standalone Hugging Face checkpoint. The donor model is not required for inference.
+DenseK3-4B 以 standalone Hugging Face checkpoint 发布。推理时不需要 donor 模型。
 
-Install a CUDA-compatible PyTorch build, followed by the minimal runtime dependencies:
+先安装兼容 CUDA 的 PyTorch，再安装最小运行时依赖：
 
 ```bash
 python -m pip install \
@@ -474,7 +472,7 @@ python -m pip install \
   "flash-linear-attention==0.5.2"
 ```
 
-Then load the model:
+然后加载模型：
 
 ```python
 import torch
@@ -505,17 +503,17 @@ outputs = model.generate(
 print(tokenizer.decode(outputs[0], skip_special_tokens=True))
 ```
 
-DenseK3-4B is a **base causal language model**, not an instruction-tuned chat model.
+DenseK3-4B 是 **base causal language model**，不是 instruction-tuned chat model。
 
-The validated release path is **Hugging Face Transformers with the bundled custom model code**. vLLM, SGLang, Docker Model Runner, and other serving backends are not part of the current validation claim unless explicitly documented otherwise.
+已验证的发布路径是 **Hugging Face Transformers + 随模型提供的自定义 model code**。除非另有明确文档，vLLM、SGLang、Docker Model Runner 及其他服务后端不在当前验证声明范围内。
 
-Because the model uses custom Hub code, review the bundled implementation before enabling `trust_remote_code=True`. Pin a specific Hugging Face revision when immutable code provenance is required.
+由于模型使用自定义 Hub 代码，启用 `trust_remote_code=True` 前请审阅随附实现。需要不可变代码 provenance 时，请固定具体的 Hugging Face revision。
 
 ---
 
 ### Development / Reproduction
 
-For migration research, evaluation, or exact environment reproduction:
+如需进行迁移研究、评测或精确环境复现：
 
 ```bash
 git clone https://github.com/yigu666/DenseK3.git
@@ -525,39 +523,39 @@ python -m pip install -r requirements.txt
 python -m pip install -e .
 ```
 
-Run the public regression suite:
+运行公开回归测试套件：
 
 ```bash
 python -m pytest -q tests titan/tests --disable-warnings
 ```
 
-The staged public tree currently records:
+当前 staged public tree 记录：
 
 ```text
 281 passed
 2 skipped
 ```
 
-with the two skips corresponding to donor-metadata checks.
+其中两个 skip 对应 donor-metadata 检查。
 
 ---
 
 ## 🧪 Reproduction
 
-The GitHub repository does not bundle donor weights or datasets.
+GitHub 仓库不包含 donor 权重或数据集。
 
-Public evaluation assets can be prepared with the documented utilities:
+可使用文档中的工具准备公开评测资源：
 
 ```bash
 python scripts/download_evaluation_assets.py --root "$PWD"
 python evaluation/prepare_ruler_data.py
 ```
 
-Exact environment setup, upstream revisions, migration-stage entry points, training contracts, checkpoint assembly, and inference-only benchmark reproduction are documented in:
+完整环境设置、上游 revision、迁移阶段入口、训练契约、checkpoint 组装和仅推理 benchmark 复现说明见：
 
 [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md)
 
-Research-stage delta artifacts and assembly provenance are retained for migration reproducibility, but they are **not separate public model products**.
+研究阶段的 delta artifact 与组装 provenance 为迁移复现而保留，但它们**不是独立的公开模型产品**。
 
 ---
 
@@ -565,56 +563,56 @@ Research-stage delta artifacts and assembly provenance are retained for migratio
 
 ```text
 DenseK3/
-├── src/                  # model and architecture-migration implementation
-├── titan/                # recovery and distillation implementation
-├── evaluation/           # frozen evaluation utilities
-├── tests/                # unit, parity, and regression tests
-├── docs/                 # architecture, migration, training, results, reproduction
-└── release/              # standalone export and release-validation evidence
+├── src/                  # 模型与架构迁移实现
+├── titan/                # 恢复与蒸馏实现
+├── evaluation/           # 冻结评测工具
+├── tests/                # 单元、parity 与回归测试
+├── docs/                 # 架构、迁移、训练、结果与复现文档
+└── release/              # standalone 导出与发布验证证据
 ```
 
-The recommended user-facing checkpoint is:
+推荐用户使用的 checkpoint 是：
 
 🤗 **[qinfu19/DenseK3-4B](https://huggingface.co/qinfu19/DenseK3-4B)**
 
-No donor weights, datasets, optimizer states, credentials, private caches, or noncanonical research checkpoints are committed to the GitHub source tree.
+GitHub 源码树不提交 donor 权重、数据集、optimizer state、凭据、私有 cache 或非 canonical research checkpoint。
 
 ---
 
 ## 📚 Documentation
 
-| Document                                                         | Description                                                 |
-| ---------------------------------------------------------------- | ----------------------------------------------------------- |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)                   | Architecture equations, tensor shapes, and cache invariants |
-| [`docs/MIGRATION.md`](docs/MIGRATION.md)                         | Qwen3.5 → DenseK3 parameter mapping and staged migration    |
-| [`docs/TRAINING.md`](docs/TRAINING.md)                           | Joint recovery and capability-distillation contracts        |
-| [`docs/LONG_CONTEXT.md`](docs/LONG_CONTEXT.md)                   | Latent-cache accounting and long-context runtime evidence   |
-| [`docs/RESULTS.md`](docs/RESULTS.md)                             | Frozen evaluation protocols and aggregate results           |
-| [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md)             | Environment, data, runners, and checkpoint reproduction     |
-| [`docs/RELEASE_SCOPE.md`](docs/RELEASE_SCOPE.md)                 | Public release scope and research-artifact boundaries       |
-| [`release/RELEASE_VALIDATION.md`](release/RELEASE_VALIDATION.md) | Standalone export and clean-room parity validation          |
-| [`release/SECURITY_AUDIT.md`](release/SECURITY_AUDIT.md)         | Credential, path, cache, and provenance audit               |
+| 文档                                                               | 说明                                             |
+| ------------------------------------------------------------------ | ------------------------------------------------ |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)                     | 架构公式、张量形状与 cache 不变量                |
+| [`docs/MIGRATION.md`](docs/MIGRATION.md)                           | Qwen3.5 → DenseK3 参数映射与分阶段迁移           |
+| [`docs/TRAINING.md`](docs/TRAINING.md)                             | 联合恢复与能力蒸馏契约                           |
+| [`docs/LONG_CONTEXT.md`](docs/LONG_CONTEXT.md)                     | latent-cache 记账与长上下文 runtime 证据          |
+| [`docs/RESULTS.md`](docs/RESULTS.md)                               | 冻结评测协议与聚合结果                           |
+| [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md)               | 环境、数据、runner 与 checkpoint 复现             |
+| [`docs/RELEASE_SCOPE.md`](docs/RELEASE_SCOPE.md)                   | 公开范围与研究 artifact 边界                     |
+| [`release/RELEASE_VALIDATION.md`](release/RELEASE_VALIDATION.md)   | standalone 导出与 clean-room parity 验证          |
+| [`release/SECURITY_AUDIT.md`](release/SECURITY_AUDIT.md)           | 凭据、路径、cache 与 provenance 审计              |
 
 ---
 
 ## ⚠️ Scope and Limitations
 
-* **DenseK3-4B** is the canonical public model. Internal stage identifiers such as `P11.6` are retained only for research provenance.
-* DenseK3-4B is a **text-only base causal language model**, not an instruction-tuned conversational assistant.
-* DenseK3-4B trails Qwen3.5-4B-Base on the reported aggregate capability and long-context benchmarks.
-* The project does not claim a throughput advantage over Qwen.
-* The 512K result is runtime feasibility evidence; standardized task-quality evidence currently stops at 128K.
-* The derived 75% memory reduction applies only to sequence-growing persistent attention-state payload, not total VRAM.
-* The model uses custom Transformers code and requires the FLA runtime dependency.
-* DenseK3-4B has not undergone dedicated safety alignment or dedicated bias/toxicity/red-team evaluation.
+* **DenseK3-4B** 是规范公开模型。`P11.6` 等内部阶段标识仅用于研究 provenance。
+* DenseK3-4B 是**纯文本 base causal language model**，不是 instruction-tuned conversational assistant。
+* 在报告的聚合能力与长上下文 benchmark 上，DenseK3-4B 低于 Qwen3.5-4B-Base。
+* 本项目不声称相对于 Qwen 具有吞吐量优势。
+* 512K 结果是 runtime 可行性证据；标准化任务质量证据截至 128K。
+* 推导的 75% 内存降低仅适用于随序列增长的持久化 attention-state payload，不代表总 VRAM 降低。
+* 模型使用自定义 Transformers 代码，并需要 FLA runtime 依赖。
+* DenseK3-4B 尚未进行专门的安全对齐或专门的 bias/toxicity/red-team 评测。
 
-Post-canonical experimental work is documented separately where appropriate and is not part of the DenseK3-4B release.
+规范版本之后的实验工作将在适当位置单独记录，不属于 DenseK3-4B 发布内容。
 
 ---
 
 ## 🙏 Acknowledgements
 
-DenseK3 builds on ideas, models, and open-source work from:
+DenseK3 基于以下思想、模型和开源工作构建：
 
 * Qwen / Qwen3.5
 * Kimi / Kimi K3 / Kimi Linear
@@ -622,15 +620,15 @@ DenseK3 builds on ideas, models, and open-source work from:
 * Flash Linear Attention
 * Hugging Face Transformers
 
-DenseK3-4B is an independent research release and is not affiliated with or endorsed by Moonshot AI.
+DenseK3-4B 是独立研究发布，与 Moonshot AI 无隶属关系，也未得到其认可或背书。
 
-See [`NOTICE`](NOTICE) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for upstream licenses, attribution, and provenance.
+上游许可证、署名和 provenance 见 [`NOTICE`](NOTICE) 与 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
 
 ---
 
 ## 📖 Citation
 
-If DenseK3 is useful in your research, please cite:
+如果 DenseK3 对你的研究有帮助，请引用：
 
 ```bibtex
 @software{densek3_2026,
@@ -645,11 +643,11 @@ If DenseK3 is useful in your research, please cite:
 
 ## 📄 License
 
-Original DenseK3 code is released under the **Apache License 2.0**.
+DenseK3 原创代码以 **Apache License 2.0** 发布。
 
-Qwen, Kimi, Flash Linear Attention, Hugging Face Transformers, datasets, and other third-party materials retain their respective upstream licenses and terms.
+Qwen、Kimi、Flash Linear Attention、Hugging Face Transformers、datasets 及其他第三方材料继续遵循各自上游许可证与条款。
 
-See:
+详见：
 
 * [`LICENSE`](LICENSE)
 * [`NOTICE`](NOTICE)
